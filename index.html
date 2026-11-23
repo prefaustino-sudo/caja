@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caja – FAUSTINO PRE</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<style>
+:root{--az:#1B2A6B;--az2:#0F1A47;--gr:#F4F6FB;--bo:#B9C1D3;--tx:#1C2233;--su:#4A5368;--ok:#2E9E48;--no:#C62828;--am:#F7B500}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--gr);color:var(--tx);font-size:15px}
+header{background:var(--az);color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+header b{font-size:18px;letter-spacing:.5px}
+.chip{background:rgba(255,255,255,.15);padding:5px 10px;border-radius:16px;font-size:13px;font-weight:bold}
+.chip.alerta{background:var(--am);color:#1C2233}
+nav{display:flex;gap:6px;padding:10px 16px 0;flex-wrap:wrap}
+nav button{flex:1 1 140px;height:46px;border-radius:10px 10px 0 0;border:1px solid var(--bo);border-bottom:none;background:#E3E7F0;font-size:15px;font-weight:bold;color:var(--az)}
+nav button.act{background:#fff}
+main{max-width:1100px;margin:0 auto;padding:0 16px 40px}
+.panel{background:#fff;border-radius:0 0 12px 12px;padding:18px;box-shadow:0 1px 3px rgba(20,30,60,.08)}
+.card{background:#fff;border:1px solid #E1E5EE;border-radius:12px;padding:14px;margin-top:12px}
+h3{margin:0 0 10px;font-size:14px;color:var(--su);text-transform:uppercase;letter-spacing:.3px}
+label{display:block;font-size:12px;font-weight:bold;color:var(--su);margin:10px 0 4px}
+input,select{width:100%;height:46px;border:1px solid var(--bo);border-radius:10px;padding:0 12px;font-size:16px;background:#fff;color:var(--tx)}
+input:focus,select:focus{outline:2px solid var(--az)}
+.fila{display:flex;gap:10px;flex-wrap:wrap}.fila>*{flex:1 1 200px}
+.btn{height:48px;padding:0 18px;border-radius:10px;border:none;background:var(--az);color:#fff;font-size:15px;font-weight:bold;cursor:pointer}
+.btn.sec{background:#fff;color:var(--az);border:1px solid var(--bo)}
+.btn.ok{background:var(--ok)}.btn.gr{height:56px;font-size:17px}
+.btn:disabled{opacity:.5}
+.ops{display:flex;gap:8px;flex-wrap:wrap}
+.op{height:44px;padding:0 16px;border-radius:22px;border:1px solid var(--bo);background:#fff;font-size:14px;font-weight:bold;color:var(--tx);cursor:pointer}
+.op.sel{background:var(--az);color:#fff;border-color:var(--az)}
+.res{border:1px solid #E1E5EE;border-radius:10px;padding:10px 12px;margin-top:8px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.res .n{font-weight:bold}.res small{color:var(--su);display:block;margin-top:2px}
+.tag{display:inline-block;font-size:11px;font-weight:bold;padding:3px 8px;border-radius:10px;background:#EEF1F6;color:var(--az);margin-right:4px}
+.tag.ok{background:#E7F5EA;color:#1F7A35}.tag.am{background:#FFF6DB;color:#6B4E00}.tag.no{background:#FDECEC;color:#8E1B1B}
+.precio{background:#EEF1F6;border-radius:12px;padding:12px 14px;margin-top:12px}
+.precio div{display:flex;justify-content:space-between;padding:3px 0}
+.precio .tot{font-weight:bold;font-size:18px;border-top:1px solid var(--bo);margin-top:4px;padding-top:6px}
+.grande{font-size:26px;font-weight:bold}
+.msg{padding:12px 14px;border-radius:10px;margin-top:12px;font-size:14px}
+.msg.ok{background:#E7F5EA;border:1px solid var(--ok)}.msg.no{background:#FDECEC;border:1px solid var(--no)}.msg.am{background:#FFF6DB;border:1px solid #E0A800}
+.oculto{display:none!important}
+#ticket .sub{padding-left:3mm;font-size:11px}
+.check{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:15px}
+.check input{width:24px;height:24px}
+.tabla{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}.tabla td,.tabla th{padding:8px 6px;border-bottom:1px solid #E1E5EE;text-align:left}
+#centro{max-width:420px;margin:40px auto}
+#cargando{position:fixed;inset:0;background:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;z-index:9}
+/* ---------- TICKET 80 mm ---------- */
+#ticket{width:72mm;background:#fff;color:#000;font-family:'Courier New',monospace;font-size:12px;line-height:1.35;padding:2mm;margin:10px auto;border:1px dashed #999}
+#ticket .c{text-align:center}#ticket .b{font-weight:bold}
+#ticket .l{display:flex;justify-content:space-between;gap:6px}
+#ticket hr{border:none;border-top:1px dashed #000;margin:5px 0}
+#ticket img.logo{display:block;margin:0 auto 3px;width:26mm;height:auto}
+#ticket .qr{text-align:center;margin:4px 0}#ticket .qr img{width:30mm;height:30mm}
+@media print{
+  @page{size:80mm auto;margin:0}
+  body{background:#fff}
+  body>*:not(#zonaTicket){display:none!important}
+  #zonaTicket{display:block!important}
+  #ticket{border:none;margin:0;padding:1mm 3mm}
+}
+#zonaTicket{display:none}
+</style>
+</head>
+<body>
+<div id="cargando" class="oculto">Un momento…</div>
+
+<!-- ============ CONFIGURACIÓN INICIAL ============ -->
+<div id="vConfig" class="oculto"><div id="centro" class="panel" style="border-radius:12px">
+  <h3>Configurar la caja (solo la primera vez)</h3>
+  <label>Pega aquí la URL de la aplicación web (termina en /exec)</label>
+  <input id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec">
+  <p style="font-size:13px;color:var(--su)">Se guarda en este equipo. Para cambiarla después, toca "Cambiar URL" en la pantalla de ingreso.</p>
+  <button class="btn" onclick="guardarUrl()">Guardar</button>
+  <div id="cfgMsg"></div>
+</div></div>
+
+<!-- ============ INGRESO ============ -->
+<div id="vLogin" class="oculto"><div id="centro" class="panel" style="border-radius:12px">
+  <div style="text-align:center;font-weight:bold;font-size:20px;color:var(--az)">FAUSTINO PRE</div>
+  <div style="text-align:center;color:var(--su);margin-bottom:10px">Caja · Matrícula</div>
+  <label>Cajero</label><select id="loCajero"></select>
+  <label>PIN</label><input id="loPin" type="password" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')entrar()">
+  <div style="margin-top:14px;display:flex;gap:8px"><button class="btn" style="flex:1" onclick="entrar()">Entrar</button>
+  <button class="btn sec" onclick="mostrar('vConfig')">Cambiar URL</button></div>
+  <div id="loMsg"></div>
+</div></div>
+
+<!-- ============ APP ============ -->
+<div id="vApp" class="oculto">
+<header>
+  <div><b>FAUSTINO PRE</b> &nbsp;<span style="opacity:.85">Caja · <span id="hCiclo"></span></span></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <span class="chip" id="hVac"></span><span class="chip" id="hEsc"></span><span class="chip" id="hCaj"></span>
+    <button class="btn sec" style="height:34px;font-size:13px" onclick="salir()">Salir</button>
+  </div>
+</header>
+<nav>
+  <button data-t="tInf" class="act" onclick="tab('tInf')">1 · Informes</button>
+  <button data-t="tCob" onclick="tab('tCob')">2 · Cobrar matrícula</button>
+  <button data-t="tSal" onclick="tab('tSal')">3 · Cobrar saldo</button>
+  <button data-t="tHoy" onclick="tab('tHoy')">Recibos de hoy</button>
+</nav>
+<main>
+
+<!-- ---------- INFORMES / COTIZACIÓN ---------- -->
+<section id="tInf" class="panel">
+  <h3>Buscar por nombre y apellido o DNI</h3>
+  <div class="fila"><input id="infQ" placeholder="Ej.: Claros Gelin  ·  o DNI" onkeydown="if(event.key==='Enter')buscar('inf')">
+  <button class="btn" style="flex:0 0 120px" onclick="buscar('inf')">Buscar</button></div>
+  <div id="infRes"></div>
+  <div id="infForm" class="card oculto">
+    <h3>Cotización</h3>
+    <div id="infQuien"></div>
+    <div class="fila">
+      <div><label>Apellidos y nombres</label><input id="infNom"></div>
+      <div><label>DNI (si lo sabe)</label><input id="infDni" inputmode="numeric"></div>
+    </div>
+    <div class="fila">
+      <div><label>Celular / WhatsApp</label><input id="infCel" inputmode="numeric"></div>
+      <div><label>Colegio</label><input id="infCol"></div>
+    </div>
+    <label>Producto</label>
+    <div class="ops" data-grupo="infProd">
+      <button class="op sel" data-v="PRE">Preuniversitario</button><button class="op" data-v="ESCOLAR">Ciclo escolar (School / High School)</button>
+    </div>
+    <label id="infGradoLbl">¿Qué hará el alumno en el año escolar 2027?</label>
+    <div class="ops" data-grupo="infGrado"></div>
+    <label class="check soloPre"><input type="checkbox" id="infHer" onchange="previewInf()"> Es 2.º hermano (−S/ <span class="vHer"></span>)</label>
+    <div id="infPrecio"></div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn ok gr" onclick="cotizar()">Generar e imprimir cotización</button>
+      <button class="btn sec gr" onclick="pasarACobro()">Matricular ahora →</button>
+    </div>
+    <div id="infMsg"></div>
+  </div>
+</section>
+
+<!-- ---------- COBRAR MATRÍCULA ---------- -->
+<section id="tCob" class="panel oculto">
+  <div id="cobPaso1">
+    <h3>Paso 1 · Buscar alumno (nombre, DNI o código)</h3>
+    <div class="fila"><input id="cobQ" placeholder="Nombre y apellido, DNI o código" onkeydown="if(event.key==='Enter')buscar('cob')">
+    <button class="btn" style="flex:0 0 120px" onclick="buscar('cob')">Buscar</button></div>
+    <div id="cobRes"></div>
+  </div>
+  <div id="cobForm" class="card oculto">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <h3 style="margin:0">Paso 2 · Registrar el pago</h3><button class="btn sec" style="height:36px" onclick="limpiarCobro()">Cambiar alumno</button>
+    </div>
+    <div id="cobQuien"></div>
+    <div class="fila">
+      <div><label>Apellidos y nombres (como en el DNI)</label><input id="cobNom"></div>
+      <div><label>DNI o carné de extranjería</label><input id="cobDni" inputmode="numeric"></div>
+    </div>
+    <div class="fila">
+      <div><label>WhatsApp del apoderado (para enviarle la ficha)</label><input id="cobCel" inputmode="numeric"></div>
+      <div><label>Colegio</label><input id="cobCol"></div>
+    </div>
+    <label>Producto</label>
+    <div class="ops" data-grupo="cobProd">
+      <button class="op sel" data-v="PRE">Preuniversitario</button><button class="op" data-v="ESCOLAR">Ciclo escolar (School / High School)</button>
+    </div>
+    <label id="cobGradoLbl">¿Qué hará el alumno en el año escolar 2027? (define el precio)</label>
+    <div class="ops" data-grupo="cobGrado"></div>
+    <div class="fila">
+      <div class="soloPre"><label>Beca social (solo casos autorizados por Omar)</label>
+        <select id="cobBeca" onchange="previewCob()"><option value="NO">No</option><option value="COMPLETA">Beca completa (S/ 50)</option><option value="MEDIA">Media beca (S/ 375)</option></select></div>
+      <div><label>Libro y merchandising</label><select id="cobLib"><option value="ENTREGADO">Entregado hoy</option><option value="POR RECOGER">Por recoger</option></select></div>
+    </div>
+    <label class="check soloPre"><input type="checkbox" id="cobHer" onchange="previewCob()"> Es 2.º hermano (−S/ <span class="vHer"></span>)</label>
+    <div id="cobHerBox" class="oculto"><label>Código del Verano 2027 del hermano ya matriculado</label><input id="cobHerCod" inputmode="numeric"></div>
+    <label>Modalidad de pago</label>
+    <div class="ops" data-grupo="cobMod">
+      <button class="op sel" data-v="CONTADO">Contado</button><button class="op" data-v="2PARTES">2 partes</button>
+    </div>
+    <div id="cobPrecio"></div>
+    <div class="card" style="margin-top:12px">
+      <h3>Pago de hoy</h3>
+      <div class="fila">
+        <div><label>Monto 1 (S/)</label><input id="p1m" inputmode="decimal"></div>
+        <div><label>Forma</label><select id="p1f"><option>EFECTIVO</option><option>YAPE</option><option>PLIN</option></select></div>
+        <div><label>N.° de operación (Yape/Plin)</label><input id="p1o"></div>
+      </div>
+      <label class="check"><input type="checkbox" id="mixto" onchange="mixtoCob()"> Pago mixto (2 formas de pago)</label>
+      <div id="p2box" class="fila oculto">
+        <div><label>Monto 2 (S/)</label><input id="p2m" inputmode="decimal"></div>
+        <div><label>Forma</label><select id="p2f"><option>YAPE</option><option>EFECTIVO</option><option>PLIN</option></select></div>
+        <div><label>N.° de operación</label><input id="p2o"></div>
+      </div>
+      <div class="fila"><div><label>¿Quién recibió el dinero?</label><select id="cobRecibio"><option value="CAJA">La caja (este cajero)</option><option value="OMAR">Omar (directo)</option></select></div></div>
+    </div>
+    <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div><div style="font-size:12px;color:var(--su);font-weight:bold">COBRAR HOY</div><div class="grande" id="cobHoy">S/ 0</div></div>
+      <button class="btn ok gr" id="btnCobrar" onclick="cobrar()">Cobrar e imprimir recibo</button>
+    </div>
+    <div id="cobMsg"></div>
+  </div>
+  <div id="cobListo" class="card oculto"></div>
+</section>
+
+<!-- ---------- COBRAR SALDO ---------- -->
+<section id="tSal" class="panel oculto">
+  <h3>Buscar alumno matriculado con saldo</h3>
+  <div class="fila"><input id="salQ" placeholder="Nombre, DNI o código" onkeydown="if(event.key==='Enter')buscar('sal')">
+  <button class="btn" style="flex:0 0 120px" onclick="buscar('sal')">Buscar</button></div>
+  <div id="salRes"></div>
+  <div id="salForm" class="card oculto">
+    <div id="salQuien"></div>
+    <div class="fila">
+      <div><label>Monto 1 (S/)</label><input id="s1m" inputmode="decimal"></div>
+      <div><label>Forma</label><select id="s1f"><option>EFECTIVO</option><option>YAPE</option><option>PLIN</option></select></div>
+      <div><label>N.° de operación</label><input id="s1o"></div>
+    </div>
+    <label class="check"><input type="checkbox" id="smixto" onchange="document.getElementById('s2box').classList.toggle('oculto',!this.checked)"> Pago mixto</label>
+    <div id="s2box" class="fila oculto">
+      <div><label>Monto 2 (S/)</label><input id="s2m" inputmode="decimal"></div>
+      <div><label>Forma</label><select id="s2f"><option>YAPE</option><option>EFECTIVO</option><option>PLIN</option></select></div>
+      <div><label>N.° de operación</label><input id="s2o"></div>
+    </div>
+    <div class="fila"><div><label>¿Quién recibió el dinero?</label><select id="salRecibio"><option value="CAJA">La caja (este cajero)</option><option value="OMAR">Omar (directo)</option></select></div></div>
+    <div style="margin-top:14px"><button class="btn ok gr" onclick="cobrarSaldo()">Cobrar saldo e imprimir recibo</button></div>
+    <div id="salMsg"></div>
+  </div>
+</section>
+
+<!-- ---------- HOY ---------- -->
+<section id="tHoy" class="panel oculto">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <h3 style="margin:0">Recibos de hoy</h3>
+    <div style="display:flex;gap:8px"><input id="hoyN" placeholder="N.° de recibo" style="width:150px">
+    <button class="btn sec" onclick="reimprimir(document.getElementById('hoyN').value)">Reimprimir</button>
+    <button class="btn" onclick="cargarHoy()">Actualizar</button></div>
+  </div>
+  <div id="hoyRes"></div>
+</section>
+</main>
+</div>
+
+<!-- Zona que se imprime -->
+<div id="zonaTicket"><div id="ticket"></div></div>
+
+<script>
+// ===================== ESTADO =====================
+const S = { api: localStorage.getItem('caja_api') || '', cajero: sessionStorage.getItem('caja_cajero') || '',
+  pin: sessionStorage.getItem('caja_pin') || '', est: null, logo: localStorage.getItem('caja_logo') || '',
+  sel: { inf: null, cob: null, sal: null }, buscados: {} };
+const $ = id => document.getElementById(id);
+const soles = n => 'S/ ' + Number(n || 0).toFixed(2).replace(/\.00$/, '');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const GRADO_TXT = { '5TO': 'Estudiará 5.º de secundaria', '4TO_O_MENOS': 'Estudiará 4.º o menos', 'EGRESADO': 'Egresado',
+  'PASA_1': 'Pasará a 1.º de secundaria', 'PASA_2': 'Pasará a 2.º de secundaria', 'PASA_3': 'Pasará a 3.º de secundaria', 'PASA_4': 'Pasará a 4.º de secundaria' };
+const BOTONES_GRADO = {
+  PRE: '<button class="op" data-v="5TO">Estudiará 5.º</button><button class="op" data-v="4TO_O_MENOS">4.º o menos</button><button class="op" data-v="EGRESADO">Ya terminó (egresado)</button>',
+  ESCOLAR: '<button class="op" data-v="PASA_1">Pasará a 1.º</button><button class="op" data-v="PASA_2">Pasará a 2.º</button><button class="op" data-v="PASA_3">Pasará a 3.º</button><button class="op" data-v="PASA_4">Pasará a 4.º</button>' };
+function ponerProducto(pre, prod) {
+  ponerOp(pre + 'Prod', prod);
+  document.querySelector('[data-grupo="' + pre + 'Grado"]').innerHTML = BOTONES_GRADO[prod];
+  $(pre + 'GradoLbl').textContent = prod === 'PRE' ? '¿Qué hará el alumno en el año escolar 2027? (define el precio)' : '¿A qué grado pasará en 2027? (1.º-2.º = FAUSTINO SCHOOL · 3.º-4.º = FAUSTINO HIGH SCHOOL)';
+  document.querySelectorAll('#' + (pre === 'inf' ? 'infForm' : 'cobForm') + ' .soloPre').forEach(x => x.classList.toggle('oculto', prod !== 'PRE'));
+  if (prod !== 'PRE') { if (pre === 'cob') { $('cobBeca').value = 'NO'; $('cobHer').checked = false; } else $('infHer').checked = false; }
+}
+
+function mostrar(v) { ['vConfig', 'vLogin', 'vApp'].forEach(x => $(x).classList.toggle('oculto', x !== v)); if (v === 'vConfig') $('cfgUrl').value = S.api; }
+function cargando(si) { $('cargando').classList.toggle('oculto', !si); }
+function aviso(id, tipo, texto) { $(id).innerHTML = texto ? '<div class="msg ' + tipo + '">' + texto + '</div>' : ''; }
+
+async function api(accion, params, d) {
+  if (!S.api) throw new Error('Falta la URL de la aplicación web');
+  const u = new URL(S.api);
+  u.searchParams.set('accion', accion);
+  if (S.cajero) { u.searchParams.set('cajero', S.cajero); u.searchParams.set('pin', S.pin); }
+  Object.keys(params || {}).forEach(k => u.searchParams.set(k, params[k]));
+  if (d) u.searchParams.set('d', JSON.stringify(d));
+  let r;
+  try { r = await fetch(u.toString()); } catch (e) { throw new Error('Sin conexión con el sistema. Revisa el internet y vuelve a intentar.'); }
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.msg || 'Error');
+  return j;
+}
+
+// ===================== INICIO =====================
+async function guardarUrl() {
+  const u = $('cfgUrl').value.trim();
+  if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(u)) { aviso('cfgMsg', 'no', 'La URL debe empezar con https://script.google.com y terminar en /exec'); return; }
+  S.api = u; localStorage.setItem('caja_api', u); await iniciar();
+}
+async function iniciar() {
+  if (!S.api) { mostrar('vConfig'); return; }
+  cargando(true);
+  try {
+    const j = await api('cajeros');
+    $('loCajero').innerHTML = j.cajeros.map(c => '<option' + (c === S.cajero ? ' selected' : '') + '>' + esc(c) + '</option>').join('');
+    if (!S.logo) { api('logo').then(x => { if (x.logo) { S.logo = x.logo; try { localStorage.setItem('caja_logo', x.logo); } catch (e) { } } }).catch(() => { }); }
+    if (S.cajero && S.pin) { try { await login(); return; } catch (e) { } }
+    mostrar('vLogin');
+  } catch (e) { mostrar('vConfig'); aviso('cfgMsg', 'no', esc(e.message)); }
+  finally { cargando(false); }
+}
+async function entrar() {
+  S.cajero = $('loCajero').value; S.pin = $('loPin').value.trim();
+  cargando(true);
+  try { await login(); } catch (e) { aviso('loMsg', 'no', esc(e.message)); S.pin = ''; }
+  finally { cargando(false); }
+}
+async function login() {
+  const j = await api('login');
+  sessionStorage.setItem('caja_cajero', S.cajero); sessionStorage.setItem('caja_pin', S.pin);
+  S.est = j; $('loPin').value = ''; aviso('loMsg', '', '');
+  $('hCiclo').textContent = j.ciclo; $('hCaj').textContent = j.cajero + (j.nombre ? ' · ' + j.nombre : '');
+  document.querySelectorAll('.vHer').forEach(x => x.textContent = j.precios.descHermano);
+  document.querySelectorAll('.vRec').forEach(x => x.textContent = j.precios.recargo);
+  pintarVacantes(j.usadas, j.vacantes); pintarEscolar(j.escolar);
+  mostrar('vApp');
+}
+function pintarVacantes(u, v) {
+  S.est.usadas = u;
+  const h = $('hVac');
+  h.textContent = u < v ? 'Precio especial: ' + u + ' de ' + v + ' matrículas' : 'Precio especial agotado (' + u + ' de ' + v + ') · se cobra S/ ' + S.est.precios.lista;
+  h.classList.toggle('alerta', u >= v - 10);
+}
+function pintarEscolar(e) {
+  if (!e) return; S.est.escolar = e;
+  $('hEsc').textContent = 'Ciclo escolar: ' + e.total + ' (School ' + e.SCHOOL + ' · High ' + e['HIGH SCHOOL'] + ')' + (e.total >= S.est.escLimite ? ' · separar en 2 grupos' : '');
+  $('hEsc').classList.toggle('alerta', e.total >= S.est.escLimite);
+}
+function salir() { sessionStorage.clear(); S.cajero = ''; S.pin = ''; location.reload(); }
+function tab(t) {
+  document.querySelectorAll('main>section').forEach(s => s.classList.toggle('oculto', s.id !== t));
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('act', b.dataset.t === t));
+  if (t === 'tHoy') cargarHoy();
+}
+
+// Botones de opción (grado y modalidad)
+document.addEventListener('click', e => {
+  const b = e.target.closest('.op'); if (!b) return;
+  const g = b.parentElement; g.querySelectorAll('.op').forEach(x => x.classList.toggle('sel', x === b));
+  if (g.dataset.grupo === 'infProd') ponerProducto('inf', b.dataset.v);
+  if (g.dataset.grupo === 'cobProd') ponerProducto('cob', b.dataset.v);
+  if (g.dataset.grupo.indexOf('inf') === 0) previewInf(); else previewCob();
+});
+function valorOp(grupo) { const b = document.querySelector('[data-grupo="' + grupo + '"] .op.sel'); return b ? b.dataset.v : ''; }
+function ponerOp(grupo, v) { document.querySelectorAll('[data-grupo="' + grupo + '"] .op').forEach(x => x.classList.toggle('sel', x.dataset.v === v)); }
+
+// ===================== PRECIO (vista previa; el servidor confirma) =====================
+function precioLocal(d) {
+  const c = S.est.precios, usadas = S.est.usadas;
+  if (!d.grado) return null;
+  if (d.producto === 'ESCOLAR') {
+    if (d.grado.indexOf('PASA_') !== 0) return null;
+    const promo = c.escPromoActiva || d.cotPreferencial, dos = d.modalidad === '2PARTES' && promo;
+    const total = !promo ? c.escLista : (dos ? c.esc2 : c.escContado);
+    return { producto: 'ESCOLAR', lista: c.escLista, desglose: c.desgloseEsc, tipo: promo ? 'PREFERENCIAL' : 'LISTA', descPromo: promo ? c.escLista - c.escContado : 0,
+      descPromoTxt: 'Promoción', descHermano: 0, recargo: dos ? c.esc2 - c.escContado : 0, modalidad: dos ? '2PARTES' : 'CONTADO',
+      total: total, hoy: dos ? c.esc1ra : total, saldo: dos ? total - c.esc1ra : 0, sinPromo: !promo };
+  }
+  if (d.grado.indexOf('PASA_') === 0) return null;
+  const egr = d.grado === 'EGRESADO', r = { lista: c.lista, desglose: c.desglosePre, descHermano: 0, recargo: 0 };
+  if (d.beca === 'COMPLETA' || d.beca === 'MEDIA') {
+    const t = d.beca === 'COMPLETA' ? c.becaCompleta : c.becaMedia;
+    return Object.assign(r, { tipo: 'BECA SOCIAL', descPromo: c.lista - t, descPromoTxt: d.beca === 'COMPLETA' ? 'Beca social completa' : 'Media beca social', modalidad: 'CONTADO', total: t, hoy: t, saldo: 0 });
+  }
+  const precioCat = d.familia ? (egr ? c.exEgr : c.exEsc) : (egr ? c.nuEgr : c.nuEsc);
+  const pref = usadas < S.est.vacantes || d.cotPreferencial;
+  const base = pref ? precioCat : c.lista;
+  r.tipo = pref ? 'PREFERENCIAL' : 'LISTA';
+  r.descPromo = c.lista - base; r.descPromoTxt = pref ? (d.familia ? 'Promo Familia FP' : 'Promo alumno nuevo') : '';
+  r.descHermano = d.hermano ? c.descHermano : 0;
+  r.modalidad = d.modalidad === '2PARTES' ? '2PARTES' : 'CONTADO';
+  r.recargo = r.modalidad === '2PARTES' ? c.recargo : 0;
+  r.total = base - r.descHermano + r.recargo;
+  r.hoy = r.modalidad === '2PARTES' ? Math.round(r.total * c.porc) : r.total;
+  r.saldo = r.total - r.hoy;
+  return r;
+}
+function htmlPrecio(p) {
+  let h = '<div class="precio"><div><span>Precio de lista</span><span>' + soles(p.lista) + '</span></div>' +
+    (p.desglose || []).map(x => '<div style="font-size:13px;color:var(--su);padding-left:14px"><span>' + x[0] + '</span><span>' + soles(x[1]) + '</span></div>').join('');
+  if (p.descPromo) h += '<div><span>' + esc(p.descPromoTxt) + '</span><span>−' + soles(p.descPromo) + '</span></div>';
+  if (p.descHermano) h += '<div><span>Descuento 2.º hermano</span><span>−' + soles(p.descHermano) + '</span></div>';
+  if (p.recargo) h += '<div><span>Pago en 2 partes</span><span>+' + soles(p.recargo) + '</span></div>';
+  h += '<div class="tot"><span>Total</span><span>' + soles(p.total) + '</span></div>';
+  if (p.saldo > 0) h += '<div><span>Hoy (1.ª parte)</span><span>' + soles(p.hoy) + '</span></div><div><span>Saldo a ' + S.est.precios.dias2 + ' días</span><span>' + soles(p.saldo) + '</span></div>';
+  if (p.tipo === 'LISTA') h += '<div style="color:#8E1B1B;font-weight:bold">' + (p.producto === 'ESCOLAR' ? 'Sin promoción: solo al contado.' : 'Ya se usaron las ' + S.est.vacantes + ' matrículas con precio especial.') + '</div>';
+  return h + '</div>';
+}
+
+// ===================== BUSCADOR =====================
+async function buscar(donde) {
+  const q = $(donde + 'Q').value.trim();
+  if (q.length < 3) { $(donde + 'Res').innerHTML = '<div class="msg am">Escribe al menos 3 letras o el DNI.</div>'; return; }
+  cargando(true);
+  try {
+    const j = await api('buscar', { q });
+    S.buscados[donde] = j.res;
+    let h = '';
+    j.res.forEach((r, i) => {
+      if (donde === 'sal' && !r.matriculado) return;
+      let tags = r.familia ? '<span class="tag ok">Familia FP</span>' : '<span class="tag">Nuevo</span>';
+      if (r.matriculado) tags += r.saldo > 0 ? '<span class="tag am">Matriculado · debe ' + soles(r.saldo) + '</span>' : '<span class="tag ok">Ya matriculado</span>';
+      if (r.cot) tags += '<span class="tag am">Cotización ' + r.cot.n + ' vigente hasta ' + r.cot.vence + '</span>';
+      let btn = '';
+      if (donde === 'inf' && !r.matriculado) btn = '<button class="btn" onclick="elegir(\'inf\',' + i + ')">Cotizar</button>';
+      if (donde === 'cob' && !r.matriculado) btn = '<button class="btn ok" onclick="elegir(\'cob\',' + i + ')">Matricular</button>';
+      if (donde === 'sal' && r.saldo > 0) btn = '<button class="btn ok" onclick="elegir(\'sal\',' + i + ')">Cobrar saldo</button>';
+      h += '<div class="res"><div><div class="n">' + esc(r.nombre) + '</div><small>' + (r.codigo ? 'Código ' + esc(r.codigo) + ' · ' : '') +
+        (r.dni ? 'DNI ' + esc(r.dni) + ' · ' : '') + esc(r.colegio || '') + (r.ultimo ? ' · Último: ' + esc(r.ultimo) : '') + '</small><div style="margin-top:4px">' + tags + '</div></div>' + btn + '</div>';
+    });
+    if (!h) h = '<div class="msg am">No se encontró en la base' + (donde === 'sal' ? ' ningún matriculado con ese dato.' : '. Es un <b>alumno nuevo</b>.') + '</div>';
+    if (donde !== 'sal') h += '<div style="margin-top:10px"><button class="btn sec" onclick="elegir(\'' + donde + '\',-1)">+ Persona nueva (no está en la base)</button></div>';
+    if (j.total > j.res.length) h += '<div class="msg am">Hay ' + j.total + ' coincidencias: escribe también el segundo apellido o el DNI.</div>';
+    $(donde + 'Res').innerHTML = h;
+  } catch (e) { $(donde + 'Res').innerHTML = '<div class="msg no">' + esc(e.message) + '</div>'; }
+  finally { cargando(false); }
+}
+
+function elegir(donde, i) {
+  const r = i >= 0 ? S.buscados[donde][i] : { codigo: '', nombre: $(donde + 'Q').value.replace(/\d/g, '').trim(), dni: (($(donde + 'Q').value.match(/\d{8,}/) || [''])[0]), familia: false, cot: null };
+  if (r.soloCotizacion) r.familia = false;
+  S.sel[donde] = r;
+  const quien = '<div class="msg ' + (r.familia ? 'ok' : 'am') + '"><b>' + (r.familia ? 'Familia Faustino Pre' : 'Alumno nuevo') + '</b>' +
+    (r.codigo ? ' · código ' + esc(r.codigo) + ' (se mantiene)' : ' · recibirá un código nuevo al pagar') +
+    (r.cot ? '<br>Cotización N.° ' + esc(r.cot.n) + ' vigente hasta ' + esc(r.cot.vence) + ': <b>respeta su precio</b>.' : '') + '</div>';
+  if (donde === 'inf') {
+    $('infQuien').innerHTML = quien; $('infNom').value = r.nombre || ''; $('infDni').value = r.dni || '';
+    $('infCel').value = r.cel || ''; $('infCol').value = r.colegio || ''; ponerProducto('inf', r.cot && r.cot.producto && r.cot.producto !== 'PRE' ? 'ESCOLAR' : 'PRE'); $('infHer').checked = false;
+    $('infForm').classList.remove('oculto'); aviso('infMsg', '', ''); previewInf();
+    $('infForm').scrollIntoView({ behavior: 'smooth' });
+  } else if (donde === 'cob') {
+    $('cobQuien').innerHTML = quien; $('cobNom').value = r.nombre || ''; $('cobDni').value = String(r.dni || '').replace(/\D/g, '');
+    $('cobCel').value = r.cel || ''; $('cobCol').value = r.colegio || '';
+    ponerProducto('cob', r.producto || (r.cot && r.cot.producto && r.cot.producto !== 'PRE' ? 'ESCOLAR' : 'PRE')); ponerOp('cobGrado', r.cot ? r.cot.grado : ''); ponerOp('cobMod', 'CONTADO'); $('cobBeca').value = 'NO'; $('cobHer').checked = false; $('cobHerCod').value = '';
+    $('mixto').checked = false; mixtoCob(); ['p1o', 'p2m', 'p2o'].forEach(x => $(x).value = ''); $('p1f').value = 'EFECTIVO';
+    $('cobPaso1').classList.add('oculto'); $('cobListo').classList.add('oculto'); $('cobForm').classList.remove('oculto');
+    aviso('cobMsg', '', ''); previewCob(); window.scrollTo(0, 0);
+  } else {
+    $('salQuien').innerHTML = '<div class="msg am"><b>' + esc(r.nombre) + '</b> · código ' + esc(r.codigo) + '<br>Total ' + soles(r.total) + ' · pagado ' + soles(r.pagado) +
+      ' · <b>saldo ' + soles(r.saldo) + '</b>' + (r.vence ? ' · vence ' + esc(r.vence) : '') + '</div>';
+    $('s1m').value = r.saldo; $('s1o').value = ''; $('smixto').checked = false; $('s2box').classList.add('oculto'); ['s2m', 's2o'].forEach(x => $(x).value = '');
+    $('salForm').classList.remove('oculto'); aviso('salMsg', '', '');
+  }
+}
+
+// ===================== INFORMES =====================
+function datosInf() {
+  const r = S.sel.inf || {};
+  const prod = valorOp('infProd') || 'PRE';
+  return { producto: prod, familia: !!r.familia, grado: valorOp('infGrado'), hermano: prod === 'PRE' && $('infHer').checked, cotPreferencial: !!(r.cot && r.cot.tipo === 'PREFERENCIAL' && (r.cot.producto === 'PRE') === (prod === 'PRE')) };
+}
+function previewInf() {
+  const d = datosInf();
+  const p1 = precioLocal(Object.assign({ modalidad: 'CONTADO' }, d)), p2 = precioLocal(Object.assign({ modalidad: '2PARTES' }, d));
+  if (!p1) { $('infPrecio').innerHTML = '<div class="msg am">Elige el grado para ver el precio.</div>'; return; }
+  $('infPrecio').innerHTML = htmlPrecio(p1) + (p2.modalidad !== '2PARTES' ? '' : '<div class="precio"><div><b>En 2 partes</b><b>' + soles(p2.total) + '</b></div><div><span>Primera cuota (hoy)</span><span>' + soles(p2.hoy) + '</span></div><div><span>Segunda cuota a ' + S.est.precios.dias2 + ' días</span><span>' + soles(p2.saldo) + '</span></div></div>');
+}
+async function cotizar() {
+  const r = S.sel.inf || {};
+  const d = { codigo: r.codigo || '', nombre: $('infNom').value.trim(), dni: $('infDni').value.trim(), cel: $('infCel').value.trim(),
+    colegio: $('infCol').value.trim(), producto: valorOp('infProd') || 'PRE', grado: valorOp('infGrado'), hermano: valorOp('infProd') === 'PRE' && $('infHer').checked, idem: idem() };
+  if (!d.grado) { aviso('infMsg', 'no', 'Elige el grado.'); return; }
+  cargando(true);
+  try {
+    const j = await api('cotizar', {}, d);
+    aviso('infMsg', 'ok', (j.existente ? 'Ya tenía la cotización vigente N.° ' : 'Cotización N.° ') + esc(j.cot.n) + ' · válida hasta el ' + esc(j.cot.vence) + '. Imprimiendo…');
+    imprimirCot(j.cot);
+  } catch (e) { aviso('infMsg', 'no', esc(e.message)); }
+  finally { cargando(false); }
+}
+function pasarACobro() {
+  const r = Object.assign({}, S.sel.inf || {}, { nombre: $('infNom').value.trim(), dni: $('infDni').value.trim(), cel: $('infCel').value.trim(), colegio: $('infCol').value.trim() });
+  const g = valorOp('infGrado'), her = $('infHer').checked, prod = valorOp('infProd') || 'PRE';
+  r.producto = prod;
+  tab('tCob'); S.buscados.cob = [r]; elegir('cob', 0); ponerProducto('cob', prod); if (g) ponerOp('cobGrado', g); $('cobHer').checked = prod === 'PRE' && her; previewCob();
+}
+
+// ===================== COBRO =====================
+function datosCob() {
+  const r = S.sel.cob || {};
+  const prod = valorOp('cobProd') || 'PRE';
+  return { producto: prod, familia: !!r.familia, grado: valorOp('cobGrado'), hermano: prod === 'PRE' && $('cobHer').checked, beca: prod === 'PRE' ? $('cobBeca').value : 'NO',
+    modalidad: valorOp('cobMod') || 'CONTADO', cotPreferencial: !!(r.cot && r.cot.tipo === 'PREFERENCIAL' && (r.cot.producto === 'PRE') === (prod === 'PRE')) };
+}
+function previewCob() {
+  $('cobHerBox').classList.toggle('oculto', !$('cobHer').checked);
+  const d = datosCob();
+  if (d.beca !== 'NO' && d.modalidad === '2PARTES') { ponerOp('cobMod', 'CONTADO'); d.modalidad = 'CONTADO'; }
+  const p = precioLocal(d);
+  if (!p) { $('cobPrecio').innerHTML = '<div class="msg am">Elige el grado para ver el precio.</div>'; $('cobHoy').textContent = 'S/ 0'; return; }
+  if (p.modalidad !== d.modalidad) ponerOp('cobMod', p.modalidad);
+  $('cobPrecio').innerHTML = htmlPrecio(p) + (d.beca !== 'NO' ? '<div class="msg am">BECA SOCIAL: no cuenta en las ' + S.est.vacantes + ' vacantes. Se paga al contado.</div>' : '');
+  $('cobHoy').textContent = soles(p.hoy);
+  S.hoyCob = p.hoy;
+  if (!$('mixto').checked) $('p1m').value = p.hoy; else ajustarMixto();
+}
+function mixtoCob() { $('p2box').classList.toggle('oculto', !$('mixto').checked); if ($('mixto').checked) ajustarMixto(); else if (S.hoyCob) $('p1m').value = S.hoyCob; }
+function ajustarMixto() { const m1 = Number($('p1m').value || 0); if (S.hoyCob && m1 < S.hoyCob) $('p2m').value = Math.round((S.hoyCob - m1) * 100) / 100; }
+document.addEventListener('input', e => { if (e.target.id === 'p1m' && $('mixto').checked) ajustarMixto(); });
+function limpiarCobro() { $('cobForm').classList.add('oculto'); $('cobListo').classList.add('oculto'); $('cobPaso1').classList.remove('oculto'); $('cobQ').value = ''; $('cobRes').innerHTML = ''; S.sel.cob = null; $('cobQ').focus(); }
+function idem() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+
+async function cobrar() {
+  const r = S.sel.cob || {}, dd = datosCob();
+  const pagos = [{ monto: $('p1m').value, forma: $('p1f').value, op: $('p1o').value.trim() }];
+  if ($('mixto').checked) pagos.push({ monto: $('p2m').value, forma: $('p2f').value, op: $('p2o').value.trim() });
+  const d = Object.assign(dd, { codigo: r.codigo || '', nombre: $('cobNom').value.trim(), dni: $('cobDni').value.trim(), cel: $('cobCel').value.trim(),
+    colegio: $('cobCol').value.trim(), hermanoDe: $('cobHerCod').value.trim(), libro: $('cobLib').value, recibio: $('cobRecibio').value,
+    cotN: r.cot ? r.cot.n : '', pagos: pagos, idem: S.idemCob || (S.idemCob = idem()) });
+  const p = precioLocal(dd);
+  if (!p) { aviso('cobMsg', 'no', 'Elige el producto y el grado.'); return; }
+  if (!confirm('¿Cobrar ' + soles(p.hoy) + ' a ' + d.nombre + '?')) return;
+  $('btnCobrar').disabled = true; cargando(true);
+  try {
+    const j = await api('cobrar', {}, d);
+    S.idemCob = null;
+    pintarVacantes(j.usadas, j.vacantes); pintarEscolar(j.escolar);
+    imprimirRecibo(j.recibo);
+    const rc = j.recibo;
+    $('cobForm').classList.add('oculto');
+    $('cobListo').innerHTML = '<div class="msg ok"><b>Pago registrado.</b> Recibo N.° ' + esc(rc.n) + ' · ' + esc(rc.nombre) + ' · código <b>' + esc(rc.codigo) + '</b>. Ya se mandó a imprimir.</div>' +
+      (rc.avisoAula ? '<div class="msg am"><b>' + esc(rc.avisoAula) + '</b> (aviso interno, no se dice al padre).</div>' : '') +
+      '<h3 style="margin-top:14px">Paso 3 · Enviar la ficha al apoderado</h3><p style="font-size:14px">El padre completa los datos y la foto desde su celular. Puede escanear el QR del recibo o abrir el enlace por WhatsApp.</p>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' + (rc.whatsapp ? '<a class="btn ok gr" style="display:inline-flex;align-items:center;text-decoration:none" target="_blank" href="' + esc(rc.whatsapp) + '">Enviar ficha por WhatsApp</a>' : '<div class="msg am">No hay WhatsApp del apoderado: que escanee el QR del recibo.</div>') +
+      '<button class="btn sec gr" onclick="copiar(\'' + esc(rc.linkFicha) + '\')">Copiar enlace</button>' +
+      '<button class="btn sec gr" onclick="reimprimir(\'' + esc(rc.n) + '\')">Reimprimir recibo</button>' +
+      '<button class="btn gr" onclick="limpiarCobro()">Siguiente alumno</button></div>';
+    $('cobListo').classList.remove('oculto'); window.scrollTo(0, 0);
+  } catch (e) { aviso('cobMsg', 'no', esc(e.message)); }
+  finally { $('btnCobrar').disabled = false; cargando(false); }
+}
+function copiar(t) { navigator.clipboard.writeText(t).then(() => alert('Enlace copiado'), () => prompt('Copia el enlace:', t)); }
+
+async function cobrarSaldo() {
+  const r = S.sel.sal; if (!r) return;
+  const pagos = [{ monto: $('s1m').value, forma: $('s1f').value, op: $('s1o').value.trim() }];
+  if ($('smixto').checked) pagos.push({ monto: $('s2m').value, forma: $('s2f').value, op: $('s2o').value.trim() });
+  if (!confirm('¿Cobrar el saldo de ' + soles(r.saldo) + ' a ' + r.nombre + '?')) return;
+  cargando(true);
+  try {
+    const j = await api('saldo', {}, { codigo: r.codigo, pagos, recibio: $('salRecibio').value, idem: S.idemSal || (S.idemSal = idem()) });
+    S.idemSal = null;
+    imprimirRecibo(j.recibo);
+    aviso('salMsg', 'ok', 'Saldo cobrado. Recibo N.° ' + esc(j.recibo.n) + '. Imprimiendo…');
+    $('salRes').innerHTML = ''; S.sel.sal = null;
+  } catch (e) { aviso('salMsg', 'no', esc(e.message)); }
+  finally { cargando(false); }
+}
+
+// ===================== HOY =====================
+async function cargarHoy() {
+  try {
+    const j = await api('hoy');
+    let h = '<div class="precio"><div><span>Efectivo</span><span>' + soles(j.totales.EFECTIVO) + '</span></div><div><span>Yape</span><span>' + soles(j.totales.YAPE) + '</span></div><div><span>Plin</span><span>' + soles(j.totales.PLIN) + '</span></div><div class="tot"><span>Total ' + esc(j.fecha) + '</span><span>' + soles(j.total) + '</span></div></div>';
+    h += '<table class="tabla"><tr><th>N.°</th><th>Hora</th><th>Alumno</th><th>Concepto</th><th>Monto</th><th></th></tr>' + j.recibos.map(r =>
+      '<tr><td>' + esc(r.n) + '</td><td>' + esc(r.hora) + '</td><td>' + esc(r.nombre) + (r.tipo === 'BECA SOCIAL' ? ' <span class="tag am">Beca social</span>' : '') + '</td><td>' + esc(r.concepto) + '</td><td>' + soles(r.monto) + '</td><td><button class="btn sec" style="height:36px" onclick="reimprimir(\'' + esc(r.n) + '\')">Reimprimir</button></td></tr>').join('') + '</table>';
+    if (!j.recibos.length) h += '<div class="msg am">Todavía no hay recibos hoy.</div>';
+    $('hoyRes').innerHTML = h;
+  } catch (e) { $('hoyRes').innerHTML = '<div class="msg no">' + esc(e.message) + '</div>'; }
+}
+async function reimprimir(n) {
+  if (!String(n || '').trim()) return;
+  cargando(true);
+  try { const j = await api('recibo', { n }); imprimirRecibo(j.recibo); } catch (e) { alert(e.message); }
+  finally { cargando(false); }
+}
+
+// ===================== TICKETS 80 mm =====================
+function cabecera() {
+  const a = S.est.academia;
+  return (S.logo ? '<img class="logo" src="' + S.logo + '" alt="">' : '') +
+    '<div class="c b" style="font-size:14px">FAUSTINO PRE</div><div class="c">Academia Preuniversitaria</div>' +
+    '<div class="c">' + esc(a.direccion) + '</div><div class="c">Cel. ' + esc(a.celular) + '</div>';
+}
+const L = (a, b, neg) => '<div class="l' + (neg ? ' b' : '') + '"><span>' + a + '</span><span>' + b + '</span></div>';
+function qrImg(texto) {
+  try { const q = qrcode(0, 'M'); q.addData(texto); q.make(); return '<div class="qr">' + q.createImgTag(4, 0) + '</div>'; }
+  catch (e) { return '<div class="c" style="word-break:break-all;font-size:10px">' + esc(texto) + '</div>'; }
+}
+function imprimirRecibo(r) {
+  let h = cabecera() + '<div class="c b" style="margin-top:5px">RECIBO INTERNO N.° ' + esc(r.n) + '</div>' + (r.anulado ? '<div class="c b">*** ANULADO ***</div>' : '') + '<hr>' +
+    '<div>Fecha: ' + esc(r.fecha) + ' ' + esc(r.hora) + '</div><div>Cajero: ' + esc(r.cajero) + '</div>' +
+    '<div>Alumno: ' + esc(r.nombre) + '</div><div>Código: ' + esc(r.codigo) + '</div><div>Ciclo: ' + esc(r.ciclo) + '</div>' +
+    '<div>Programa: ' + esc(r.productoTxt || 'Preuniversitario') + '</div>' + (r.categoria && r.producto === 'PRE' ? '<div>Categoría: ' + esc(r.categoria) + '</div>' : '') +
+    '<div>Concepto: ' + (r.concepto === '2DA CUOTA' ? 'Segunda cuota' : 'Matrícula') + '</div><hr>';
+  h += L('Precio de lista', soles(r.lista)) + desgloseTk(r.desglose);
+  if (r.descPromo) h += L(esc(r.descPromoTxt), '-' + soles(r.descPromo));
+  if (r.descHermano) h += L('Dscto. 2.º hermano', '-' + soles(r.descHermano));
+  if (r.recargo) h += L('Pago en 2 partes', '+' + soles(r.recargo));
+  h += L('TOTAL', soles(r.total), true) + '<hr>';
+  r.pagos.forEach(p => { h += L('Pagado ' + p.forma.toLowerCase(), soles(p.monto)) + (p.op ? '<div style="font-size:11px">  Op. ' + esc(p.op) + '</div>' : ''); });
+  h += L('PAGADO HOY', soles(r.hoy), true);
+  if (r.concepto === '2DA CUOTA') h += L('Saldo', 'S/ 0 (cancelado)');
+  else if (r.saldo > 0) h += L('Saldo', soles(r.saldo)) + '<div>Vence: ' + esc(r.vence) + '</div>';
+  if (r.libro) h += '<div>Libro: ' + (r.libro === 'ENTREGADO' ? 'entregado' : 'por recoger') + '</div>';
+  h += '<hr>';
+  if (r.linkFicha) h += '<div class="c">Su matrícula queda lista al</div><div class="c">completar la ficha aquí:</div>' + qrImg(r.linkFicha);
+  h += '<div class="c b">GRACIAS POR SU CONFIANZA</div>';
+  $('ticket').innerHTML = h; imprimir();
+}
+function imprimirCot(c) {
+  let h = cabecera() + '<div class="c b" style="margin-top:5px">COTIZACIÓN N.° ' + esc(c.n) + '</div><hr>' +
+    '<div>Fecha: ' + esc(c.fecha) + '</div><div class="b">Válida hasta: ' + esc(c.vence) + '</div>' +
+    '<div>Alumno: ' + esc(c.nombre) + '</div>' + (c.codigo ? '<div>Código: ' + esc(c.codigo) + '</div>' : '') +
+    '<div>Ciclo: ' + esc(c.ciclo) + '</div><div>Programa: ' + esc(c.productoTxt) + '</div>' + (c.situacion ? '<div>' + esc(c.situacion) + '</div>' : '') + '<div>' + esc(GRADO_TXT[c.grado] || '') + '</div><hr>' +
+    L('Precio de lista', soles(c.lista)) + desgloseTk(c.desglose);
+  if (c.promo) h += L(esc(c.promoTxt), '-' + soles(c.promo));
+  if (c.hermano) h += L('Dscto. 2.º hermano', '-' + soles(c.hermano));
+  h += L('AL CONTADO', soles(c.contado), true) + '<hr>';
+  if (c.dosPartes) h += '<div class="b">En 2 partes: ' + soles(c.dosPartes) + '</div>' + L('1.ª cuota', soles(c.primera)) + L('2.ª cuota (a ' + c.dias2 + ' días)', soles(c.segunda)) + '<hr>';
+  if (c.tipo === 'PREFERENCIAL') h += '<div class="c">' + esc(c.anuncio) + '.</div><div class="c">Esta cotización respeta su precio</div><div class="c">hasta el ' + esc(c.vence) + '.</div>';
+  h += '<div class="c b" style="margin-top:4px">¡TE ESPERAMOS!</div>';
+  $('ticket').innerHTML = h; imprimir();
+}
+function desgloseTk(d) { return (d || []).map(x => '<div class="l sub"><span>' + x[0] + '</span><span>' + soles(x[1]) + '</span></div>').join(''); }
+function imprimir() {
+  const imgs = [...$('ticket').querySelectorAll('img')];
+  Promise.all(imgs.map(i => i.complete ? 1 : new Promise(ok => { i.onload = i.onerror = ok; }))).then(() => setTimeout(() => window.print(), 150));
+}
+
+iniciar();
+</script>
+</body>
+</html>
