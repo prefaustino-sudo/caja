@@ -103,6 +103,8 @@ input:focus,select:focus{outline:2px solid var(--az)}
   <button data-t="tCob" onclick="tab('tCob')">2 · Cobrar matrícula</button>
   <button data-t="tSal" onclick="tab('tSal')">3 · Cobrar saldo</button>
   <button data-t="tHoy" onclick="tab('tHoy')">Recibos de hoy</button>
+  <button data-t="tRec" onclick="tab('tRec')">Recordatorios <span id="nRec"></span></button>
+  <button data-t="tCie" onclick="tab('tCie')">Cierre de caja</button>
 </nav>
 <main>
 
@@ -237,6 +239,33 @@ input:focus,select:focus{outline:2px solid var(--az)}
   </div>
   <div id="hoyRes"></div>
 </section>
+<!-- ---------- RECORDATORIOS ---------- -->
+<section id="tRec" class="panel oculto">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <h3 style="margin:0">Recordatorios de hoy (incluye atrasados)</h3>
+    <button class="btn" onclick="cargarRec()">Actualizar</button>
+  </div>
+  <p style="font-size:13px;color:var(--su);margin:8px 0 0">Toca <b>Enviar</b>: se abre WhatsApp con el número y el mensaje listos. Envíalo y vuelve aquí. Si no lo enviaste, toca <b>Deshacer</b>. Esta computadora debe tener WhatsApp abierto con el número de la academia.</p>
+  <div id="recRes"></div>
+</section>
+
+<!-- ---------- CIERRE ---------- -->
+<section id="tCie" class="panel oculto">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <h3 style="margin:0">Cierre de caja</h3>
+    <button class="btn sec" onclick="cargarCierre()">Actualizar</button>
+  </div>
+  <div id="cieRes"></div>
+  <div id="cieForm" class="card oculto">
+    <div class="fila">
+      <div><label>Efectivo que contaste en la caja (S/)</label><input id="cieCont" inputmode="decimal" oninput="difCierre()"></div>
+      <div><label>Observación (opcional)</label><input id="cieObs" placeholder="Ej.: faltan S/ 10 de vuelto"></div>
+    </div>
+    <div id="cieDif"></div>
+    <div style="margin-top:14px"><button class="btn ok gr" onclick="cerrarCaja()">Cerrar caja e imprimir</button></div>
+    <div id="cieMsg"></div>
+  </div>
+</section>
 </main>
 </div>
 
@@ -315,6 +344,7 @@ async function login() {
   document.querySelectorAll('.vRec').forEach(x => x.textContent = j.precios.recargo);
   pintarVacantes(j.usadas, j.vacantes); pintarEscolar(j.escolar);
   mostrar('vApp');
+  contarRec();
 }
 function pintarVacantes(u, v) {
   S.est.usadas = u;
@@ -332,6 +362,8 @@ function tab(t) {
   document.querySelectorAll('main>section').forEach(s => s.classList.toggle('oculto', s.id !== t));
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('act', b.dataset.t === t));
   if (t === 'tHoy') cargarHoy();
+  if (t === 'tRec') cargarRec();
+  if (t === 'tCie') cargarCierre();
 }
 
 // Botones de opción (grado y modalidad)
@@ -510,6 +542,7 @@ async function cobrar() {
     cotN: r.cot ? r.cot.n : '', pagos: pagos, idem: S.idemCob || (S.idemCob = idem()) });
   const p = precioLocal(dd);
   if (!p) { aviso('cobMsg', 'no', 'Elige el producto y el grado.'); return; }
+  if (p.saldo > 0 && !/^9\d{8}$/.test(d.cel.replace(/\D/g, '').slice(-9))) { aviso('cobMsg', 'no', 'Paga en 2 partes: escribe el WhatsApp del apoderado (9 dígitos) para avisarle de la 2.ª cuota.'); return; }
   if (!confirm('¿Cobrar ' + soles(p.hoy) + ' a ' + d.nombre + '?')) return;
   $('btnCobrar').disabled = true; cargando(true);
   try {
@@ -564,6 +597,90 @@ async function reimprimir(n) {
   cargando(true);
   try { const j = await api('recibo', { n }); imprimirRecibo(j.recibo); } catch (e) { alert(e.message); }
   finally { cargando(false); }
+}
+
+// ===================== RECORDATORIOS =====================
+async function contarRec() { try { const j = await api('recordatorios'); $('nRec').textContent = j.lista.length ? '(' + j.lista.length + ')' : ''; } catch (e) { } }
+async function cargarRec() {
+  $('recRes').innerHTML = '<div class="msg am">Cargando…</div>';
+  try {
+    const j = await api('recordatorios');
+    S.rec = j.lista;
+    $('nRec').textContent = j.lista.length ? '(' + j.lista.length + ')' : '';
+    let h = '<div class="msg ok">Pendientes hoy: <b>' + j.lista.length + '</b> · enviados hoy: ' + j.enviadosHoy + ' · programados para otros días: ' + j.futuros + '</div>';
+    h += j.lista.map((r, i) => '<div class="res" id="rec' + i + '"><div style="flex:1 1 380px"><div class="n">' + esc(r.nombre) + ' <span class="tag' + (r.atrasado ? ' no' : ' am') + '">' + esc(r.tipoTxt) + (r.atrasado ? ' · atrasado (' + esc(r.fecha) + ')' : '') + '</span></div>' +
+      '<small>Código ' + esc(r.codigo) + ' · WhatsApp ' + esc(r.celular || 'SIN NÚMERO') + '</small><div style="font-size:13px;color:var(--su);margin-top:6px;line-height:1.4">' + esc(r.mensaje) + '</div></div>' +
+      '<div class="ops" id="recB' + i + '">' + botonesRec(i) + '</div></div>').join('');
+    if (!j.lista.length) h += '<div class="msg am">No hay recordatorios para hoy. ✔</div>';
+    $('recRes').innerHTML = h;
+  } catch (e) { $('recRes').innerHTML = '<div class="msg no">' + esc(e.message) + '</div>'; }
+}
+function botonesRec(i) {
+  const r = S.rec[i];
+  if (r.hecho === 'ENVIADO') return '<span class="tag ok">Enviado ✔</span><button class="btn sec" style="height:40px" onclick="marcarRec(' + i + ',\'PENDIENTE\')">Deshacer</button>';
+  if (r.hecho === 'DESCARTADO') return '<span class="tag">Descartado</span><button class="btn sec" style="height:40px" onclick="marcarRec(' + i + ',\'PENDIENTE\')">Deshacer</button>';
+  return (r.wa ? '<button class="btn ok" style="height:44px" onclick="enviarRec(' + i + ')">Enviar</button>' : '<span class="tag no">Sin número</span>') +
+    '<button class="btn sec" style="height:44px" onclick="if(confirm(\'¿Descartar este recordatorio?\'))marcarRec(' + i + ',\'DESCARTADO\')">Descartar</button>';
+}
+function enviarRec(i) { window.open(S.rec[i].wa, '_blank'); marcarRec(i, 'ENVIADO'); }
+async function marcarRec(i, estado) {
+  const r = S.rec[i];
+  try {
+    await api('marcarRec', {}, { fila: r.fila, codigo: r.codigo, estado: estado });
+    r.hecho = estado === 'PENDIENTE' ? '' : estado;
+    $('recB' + i).innerHTML = botonesRec(i);
+    const pend = S.rec.filter(x => !x.hecho).length; $('nRec').textContent = pend ? '(' + pend + ')' : '';
+  } catch (e) { alert(e.message); }
+}
+
+// ===================== CIERRE =====================
+async function cargarCierre() {
+  $('cieRes').innerHTML = '<div class="msg am">Cargando…</div>'; $('cieForm').classList.add('oculto');
+  try {
+    const j = await api('cierre'); S.cie = j;
+    let h = '<div class="msg ' + (j.recibos.length ? 'am' : 'ok') + '">' + (j.recibos.length ? 'Recibos de <b>' + esc(j.cajero) + '</b> sin cerrar: <b>' + (j.n + j.anulados) + '</b> (del ' + esc(j.del) + ' al ' + esc(j.al) + ')' : 'No tienes recibos pendientes de cierre.') + (j.ultimo ? '<br>Último cierre: ' + esc(j.ultimo) : '') + '</div>';
+    if (j.recibos.length) {
+      h += '<div class="precio"><div><span><b>Efectivo que debe haber en caja</b></span><span><b>' + soles(j.EFECTIVO) + '</b></span></div><div><span>Yape</span><span>' + soles(j.YAPE) + '</span></div><div><span>Plin</span><span>' + soles(j.PLIN) + '</span></div>' +
+        '<div class="tot"><span>Total cobrado por la caja</span><span>' + soles(j.total) + '</span></div>' +
+        (j.omar ? '<div><span>Recibió Omar directo (no está en la caja)</span><span>' + soles(j.omar) + '</span></div>' : '') +
+        (j.becaN ? '<div><span>Becas sociales (' + j.becaN + ')</span><span>' + soles(j.becaMonto) + '</span></div>' : '') + '</div>';
+      h += '<table class="tabla"><tr><th>N.°</th><th>Fecha</th><th>Alumno</th><th>Forma</th><th>Monto</th></tr>' + j.recibos.map(r => '<tr><td>' + esc(r.n) + '</td><td>' + esc(r.fecha) + ' ' + esc(r.hora) + '</td><td>' + esc(r.nombre) + (r.omar ? ' <span class="tag">Omar</span>' : '') + '</td><td>' + esc(r.forma) + '</td><td>' + soles(r.monto) + '</td></tr>').join('') + '</table>';
+      $('cieForm').classList.remove('oculto'); $('cieCont').value = ''; $('cieObs').value = ''; difCierre(); aviso('cieMsg', '', '');
+    }
+    $('cieRes').innerHTML = h;
+  } catch (e) { $('cieRes').innerHTML = '<div class="msg no">' + esc(e.message) + '</div>'; }
+}
+function difCierre() {
+  if (!S.cie) return; const v = $('cieCont').value.trim();
+  if (v === '') { $('cieDif').innerHTML = ''; return; }
+  const d = Math.round((Number(v) - S.cie.EFECTIVO) * 100) / 100;
+  $('cieDif').innerHTML = '<div class="msg ' + (d === 0 ? 'ok' : 'no') + '">' + (d === 0 ? 'Cuadra exacto ✔' : (d > 0 ? 'Sobran ' : 'Faltan ') + soles(Math.abs(d))) + '</div>';
+}
+async function cerrarCaja() {
+  const v = $('cieCont').value.trim();
+  if (v === '' || isNaN(Number(v))) { aviso('cieMsg', 'no', 'Escribe cuánto efectivo contaste (si no hubo efectivo, escribe 0).'); return; }
+  if (!confirm('¿Cerrar la caja con S/ ' + v + ' de efectivo contado?')) return;
+  cargando(true);
+  try {
+    const j = await api('cerrar', {}, { efectivoContado: v, obs: $('cieObs').value.trim(), idem: idem() });
+    imprimirCierre(j);
+    aviso('cieMsg', 'ok', 'Caja cerrada. Imprimiendo el ticket de cierre…');
+    setTimeout(cargarCierre, 1500);
+  } catch (e) { aviso('cieMsg', 'no', esc(e.message)); }
+  finally { cargando(false); }
+}
+function imprimirCierre(j) {
+  const c = j.cierre;
+  let h = cabecera() + '<div class="c b" style="margin-top:5px">CIERRE DE CAJA</div><hr>' +
+    '<div>Fecha: ' + esc(c.FECHA) + ' ' + esc(c.HORA_CIERRE) + '</div><div>Cajero: ' + esc(c.CAJERO) + '</div>' +
+    '<div>Recibos: ' + c.N_RECIBOS + ' (del ' + esc(c.DEL_RECIBO) + ' al ' + esc(c.AL_RECIBO) + ')</div>' + (c.N_ANULADOS ? '<div>Anulados: ' + c.N_ANULADOS + '</div>' : '') + '<hr>' +
+    L('Efectivo (sistema)', soles(c.EFECTIVO_SISTEMA)) + L('Yape', soles(c.YAPE)) + L('Plin', soles(c.PLIN)) + L('TOTAL CAJA', soles(c.TOTAL_SISTEMA), true) +
+    (c.RECIBIO_OMAR ? L('Recibió Omar directo', soles(c.RECIBIO_OMAR)) : '') + (c.N_BECA_SOCIAL ? L('Becas sociales (' + c.N_BECA_SOCIAL + ')', soles(c.MONTO_BECA_SOCIAL)) : '') + '<hr>' +
+    L('Efectivo contado', soles(c.EFECTIVO_CONTADO), true) + L('Diferencia', (c.DIFERENCIA > 0 ? '+' : '') + soles(c.DIFERENCIA), true) +
+    (c.OBSERVACION ? '<div>Obs.: ' + esc(c.OBSERVACION) + '</div>' : '') + '<hr>' +
+    j.recibos.map(r => L(esc(r.n) + ' ' + esc(String(r.nombre).slice(0, 16)), soles(r.monto))).join('') +
+    '<hr><div style="margin-top:14px">Firma cajero: ____________________</div><div style="margin-top:14px">Recibido por: ____________________</div>';
+  $('ticket').innerHTML = h; imprimir();
 }
 
 // ===================== TICKETS 80 mm =====================
@@ -623,3 +740,4 @@ iniciar();
 </script>
 </body>
 </html>
+
