@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ficha de matrícula – FAUSTINO PRE</title>
+<style>
+:root{--az:#1B2A6B;--gr:#F4F6FB;--bo:#B9C1D3;--tx:#1C2233;--su:#4A5368;--ok:#2E9E48;--no:#C62828}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--gr);color:var(--tx);font-size:15px}
+.wrap{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--az);color:#fff;padding:18px 20px 16px}
+header .t{display:flex;justify-content:space-between;align-items:center}
+header b{font-size:18px;letter-spacing:.5px}
+header .badge{font-size:12px;font-weight:bold;background:#D62839;padding:4px 10px;border-radius:20px}
+header .s{font-size:14px;margin-top:4px}
+.barra{display:flex;gap:6px;padding:16px 20px 0}.barra div{flex:1;height:6px;border-radius:3px;background:#D3D8E4}
+.barra .hecho{background:var(--ok)}.barra .act{background:var(--az)}
+.paso{padding:8px 20px 0;font-size:13px;color:var(--su);font-weight:bold}
+.card{margin:16px 20px 0;background:#fff;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(20,30,60,.08)}
+.card h2{font-size:15px;margin:0 0 6px}
+.nota{font-size:12px;color:var(--su);line-height:1.4;margin:0 0 8px}
+label{display:block;font-size:12px;font-weight:bold;color:var(--su);margin:12px 0 5px}
+input,select{width:100%;height:46px;border:1px solid var(--bo);border-radius:10px;padding:0 12px;font-size:16px;background:#fff;color:var(--tx)}
+input[readonly]{background:#EEF1F6;color:#3A4255}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dato{background:#EEF1F6;border-radius:10px;padding:10px 12px}.dato small{display:block;font-size:11px;color:var(--su);font-weight:bold}.dato b{font-size:14px}
+.ok{margin:16px 20px 0;background:#E7F5EA;border:1px solid var(--ok);border-radius:12px;padding:14px;font-size:13px;line-height:1.45}
+.err{margin:12px 20px 0;background:#FDECEC;border:1px solid var(--no);border-radius:12px;padding:12px;font-size:14px}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--bo);background:#fff;font-size:14px;font-weight:bold;color:var(--tx)}
+.pill.sel{background:var(--az);color:#fff;border-color:var(--az)}
+.pie{padding:20px 20px 28px;margin-top:auto;display:flex;gap:10px}
+.btn{flex:2;height:52px;border-radius:12px;border:none;background:var(--az);color:#fff;font-size:16px;font-weight:bold}
+.btn.sec{flex:1;background:#fff;color:var(--az);border:1px solid var(--bo)}
+.btn.verde{background:var(--ok)}
+.btn:disabled{opacity:.5}
+.foto{display:flex;flex-direction:column;align-items:center;gap:12px}
+.marco{width:180px;height:240px;border:2px dashed var(--bo);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--su);font-size:13px;text-align:center;padding:10px;background:#fff;overflow:hidden}
+.marco img{width:100%;height:100%;object-fit:cover}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;margin-top:12px}
+.check input{width:22px;height:22px;flex:0 0 22px;margin-top:2px}
+.oculto{display:none!important}
+#cargando{position:fixed;inset:0;background:rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:17px;z-index:9;text-align:center;padding:20px}
+</style>
+</head>
+<body>
+<div id="cargando">Cargando tu ficha…</div>
+<div class="wrap">
+<header>
+  <div class="t"><b>FAUSTINO PRE</b><span class="badge" id="hCiclo">Verano 2027</span></div>
+  <div class="s" id="hSub">Ficha de matrícula</div>
+</header>
+<div id="error" class="oculto"></div>
+
+<!-- ========== PASO 1 ========== -->
+<section id="p1" class="oculto">
+  <div class="barra"><div class="act"></div><div></div><div></div></div>
+  <div class="paso">Paso 1 de 3 · Revisa los datos</div>
+  <div class="ok" id="aviso1">¡Ya registramos tu pago! <b>Tu matrícula queda lista cuando completes esta ficha</b> y subas la foto del alumno. Son 3 pasos cortos.</div>
+  <div class="card">
+    <h2>Datos de la matrícula</h2>
+    <p class="nota">Estos datos los registró la secretaría. Si algo está mal, avísanos por WhatsApp.</p>
+    <div class="grid" id="fijos"></div>
+    <label>Apellidos y nombres</label><input id="fNombre" readonly>
+    <label>DNI</label><input id="fDni" readonly>
+  </div>
+  <div class="card">
+    <h2>Datos del alumno</h2>
+    <label for="fechaNac">Fecha de nacimiento *</label><input id="fechaNac" type="date">
+    <label for="celAlumno">Celular / WhatsApp del alumno</label><input id="celAlumno" inputmode="numeric" maxlength="9" placeholder="9XXXXXXXX">
+    <label for="correo">Correo electrónico</label><input id="correo" type="email">
+    <label for="direccion">Dirección</label><input id="direccion">
+    <label for="distrito">Distrito</label>
+    <select id="distrito"><option value="">Elige…</option><option>Huacho</option><option>Santa María</option><option>Hualmay</option><option>Huaura</option><option>Carquín</option><option>Vegueta</option><option>Sayán</option><option>Otro</option></select>
+    <label for="colegio">Colegio de procedencia</label><input id="colegio">
+    <div id="boxEgreso" class="oculto">
+      <label for="anioEgreso">Año en que terminó 5.º *</label>
+      <select id="anioEgreso"><option value="">Elige…</option><option>2026</option><option>2025</option><option>2024</option><option>2023 o antes</option></select>
+    </div>
+  </div>
+  <div class="pie"><button class="btn" onclick="ir(2)">Siguiente: apoderado</button></div>
+</section>
+
+<!-- ========== PASO 2 ========== -->
+<section id="p2" class="oculto">
+  <div class="barra"><div class="hecho"></div><div class="act"></div><div></div></div>
+  <div class="paso">Paso 2 de 3 · Apoderado<span class="soloPre"> y carrera</span></div>
+  <div class="card">
+    <h2>Datos del apoderado</h2>
+    <p class="nota">Este número recibirá los avisos de asistencia, notas y pagos por WhatsApp.</p>
+    <label for="apoderado">Nombre completo del apoderado *</label><input id="apoderado">
+    <label for="dniApoderado">DNI del apoderado *</label><input id="dniApoderado" inputmode="numeric" maxlength="8">
+    <label>Vínculo con el alumno *</label>
+    <div class="pills" id="vinculo"><button class="pill" data-v="Madre">Madre</button><button class="pill" data-v="Padre">Padre</button><button class="pill" data-v="Otro">Otro</button></div>
+    <label for="celApoderado">Celular / WhatsApp del apoderado *</label><input id="celApoderado" inputmode="numeric" maxlength="9" placeholder="9XXXXXXXX">
+  </div>
+  <div class="card soloPre">
+    <h2>Meta del alumno</h2>
+    <p class="nota">Puede cambiarla más adelante; la tutora la actualiza según su avance.</p>
+    <label for="carrera">Carrera a la que postula *</label><select id="carrera"></select>
+    <label for="universidad">Universidad</label>
+    <select id="universidad"><option>UNJFSC (Huacho)</option><option>Otra universidad</option><option>Aún no decide</option></select>
+    <p class="nota" style="margin-top:10px">¿No sabe aún qué carrera? Elija "Aún no decide". En el ciclo dará el test vocacional.</p>
+  </div>
+  <div class="pie"><button class="btn sec" onclick="ir(1)">Atrás</button><button class="btn" onclick="ir(3)">Siguiente: foto</button></div>
+</section>
+
+<!-- ========== PASO 3 ========== -->
+<section id="p3" class="oculto">
+  <div class="barra"><div class="hecho"></div><div class="hecho"></div><div class="act"></div></div>
+  <div class="paso">Paso 3 de 3 · Foto y autorización</div>
+  <div class="card">
+    <h2>Foto del alumno (tipo carnet)</h2>
+    <p class="nota">De frente, con fondo claro, sin gorra ni lentes oscuros. Se usará para su carnet.</p>
+    <div class="foto">
+      <div class="marco" id="marco">Toca el botón para tomar o elegir la foto</div>
+      <input type="file" id="archivo" accept="image/*" class="oculto">
+      <button class="btn sec" style="flex:none;width:100%" onclick="document.getElementById('archivo').click()" id="btnFoto">Tomar o elegir foto</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Autorización</h2>
+    <label class="check"><input type="checkbox" id="autorizaDatos"><span><b>(Obligatorio)</b> Autorizo a FAUSTINO PRE a usar estos datos y la foto del alumno para la matrícula, el carnet y los avisos de asistencia, notas y pagos, conforme a la Ley N.° 29733 de Protección de Datos Personales.</span></label>
+    <label class="check"><input type="checkbox" id="autorizaPublicidad"><span>(Opcional) Autorizo el uso de fotos del alumno en actividades de la academia para publicaciones y redes sociales de FAUSTINO PRE.</span></label>
+  </div>
+  <div class="pie"><button class="btn sec" onclick="ir(2)">Atrás</button><button class="btn verde" id="btnEnviar" onclick="enviar()">Completar matrícula</button></div>
+</section>
+
+<!-- ========== LISTO ========== -->
+<section id="p4" class="oculto">
+  <div class="barra"><div class="hecho"></div><div class="hecho"></div><div class="hecho"></div></div>
+  <div class="ok" style="font-size:15px"><b>¡Matrícula completa!</b><br><span id="listoTxt"></span></div>
+  <div class="card">
+    <h2>¿Qué sigue?</h2>
+    <p class="nota" style="font-size:14px">Su carnet con código QR estará listo en la academia. Lo usará para marcar su asistencia todos los días.</p>
+    <p class="nota" style="font-size:14px">Si necesitas corregir algún dato, vuelve a abrir este mismo enlace.</p>
+    <div id="extras" style="display:flex;flex-direction:column;gap:10px;margin-top:10px"></div>
+  </div>
+  <div class="pie"><button class="btn sec" style="flex:1" onclick="ir(1)">Revisar mis datos</button></div>
+</section>
+</div>
+
+<script>
+// URL del motor de la caja (Apps Script "CAJA FAUSTINO PRE", implementación "Caja v2")
+const API = 'https://script.google.com/macros/s/AKfycbyDT0-KpfMPRKsj_4RPMszv0vBRQGCH2YYxNWvLko6qLVnYCwIMKicJDj2x8HHZQOWHJA/exec';
+const $ = id => document.getElementById(id);
+const T = new URLSearchParams(location.search).get('t') || '';
+const GRADO = { '5TO': 'Estudiará 5.º', '4TO_O_MENOS': '4.º o menos', 'EGRESADO': 'Egresado', 'PASA_1': 'Pasará a 1.º', 'PASA_2': 'Pasará a 2.º', 'PASA_3': 'Pasará a 3.º', 'PASA_4': 'Pasará a 4.º' };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const soles = n => 'S/ ' + Number(n || 0).toFixed(2).replace(/\.00$/, '');
+let F = null, FOTO = '';
+
+function mostrarError(m) { const e = $('error'); e.className = 'err'; e.innerHTML = esc(m); e.scrollIntoView({ behavior: 'smooth' }); }
+function limpiarError() { $('error').className = 'oculto'; }
+function cargando(t) { $('cargando').textContent = t || ''; $('cargando').classList.toggle('oculto', !t); }
+
+async function iniciar() {
+  if (!T) { cargando(''); mostrarError('Este enlace está incompleto. Escanea el QR de tu recibo o abre el enlace que te enviamos por WhatsApp.'); return; }
+  try {
+    const r = await fetch(API + '?accion=ficha&t=' + encodeURIComponent(T));
+    F = await r.json();
+    if (!F.ok) throw new Error(F.msg);
+  } catch (e) { cargando(''); mostrarError(e.message && e.message.indexOf('Enlace') === 0 ? e.message : 'No pudimos abrir tu ficha. Revisa tu internet e inténtalo otra vez.'); return; }
+  const f = F.fija, d = F.datos, pre = f.esPre !== undefined ? !!f.esPre : f.producto === 'PRE';   // v2: PRE, 360 y CPU piden carrera
+  $('hCiclo').textContent = f.ciclo; $('hSub').textContent = 'Ficha de matrícula · ' + f.productoTxt + ' · ' + f.codigo;
+  let fij = '<div class="dato"><small>Código</small><b style="color:var(--az);font-size:16px">' + esc(f.codigo) + '</b></div>' +
+    '<div class="dato"><small>Programa</small><b>' + esc(f.productoTxt) + '</b></div>' +
+    '<div class="dato"><small>Año escolar 2027</small><b>' + esc(GRADO[f.grado] || f.grado) + '</b></div>' +
+    '<div class="dato"><small>Pago</small><b>' + esc(f.modalidad === '2 PARTES' ? '2 partes' : 'Contado') + '</b></div>';
+  if (f.saldo > 0) fij += '<div class="dato" style="grid-column:1/3;background:#FFF6DB"><small>Abonado · saldo · vence</small><b>' + soles(f.pagado) + ' · ' + soles(f.saldo) + ' · ' + esc(f.vence) + '</b></div>';
+  $('fijos').innerHTML = fij;
+  $('fNombre').value = f.nombre; $('fDni').value = f.dni;
+  ['fechaNac', 'celAlumno', 'correo', 'direccion', 'colegio', 'apoderado', 'dniApoderado', 'celApoderado'].forEach(k => $(k).value = d[k] || '');
+  ponerSelect('distrito', d.distrito); ponerSelect('anioEgreso', d.anioEgreso);
+  $('boxEgreso').classList.toggle('oculto', f.grado !== 'EGRESADO');
+  document.querySelectorAll('.soloPre').forEach(x => x.classList.toggle('oculto', !pre));
+  $('carrera').innerHTML = '<option value="">Elige…</option><option>Aún no decide</option>' + F.carreras.map(c => '<option>' + esc(c) + '</option>').join('') + '<option>Otra (otra universidad)</option>';
+  ponerSelect('carrera', d.carrera); ponerSelect('universidad', d.universidad);
+  marcarVinculo(d.vinculo);
+  $('autorizaDatos').checked = d.autorizaDatos; $('autorizaPublicidad').checked = d.autorizaPublicidad;
+  if (F.tieneFoto) { $('marco').textContent = 'Ya tenemos una foto. Toca el botón solo si quieres cambiarla.'; $('btnFoto').textContent = 'Cambiar foto'; }
+  if (F.completa) { $('aviso1').innerHTML = '<b>Tu ficha ya está completa.</b> Puedes revisar y corregir tus datos.'; }
+  cargando(''); ir(1);
+}
+function ponerSelect(id, v) {
+  if (!v) return; const s = $(id);
+  const op = [...s.options].find(o => o.value.toLowerCase() === String(v).toLowerCase() || o.text.toLowerCase() === String(v).toLowerCase());
+  if (op) s.value = op.value; else { const o = new Option(v, v); s.add(o); s.value = v; }
+}
+function marcarVinculo(v) { document.querySelectorAll('#vinculo .pill').forEach(b => b.classList.toggle('sel', b.dataset.v === v)); }
+document.getElementById('vinculo').addEventListener('click', e => { const b = e.target.closest('.pill'); if (b) marcarVinculo(b.dataset.v); });
+function vinculo() { const b = document.querySelector('#vinculo .pill.sel'); return b ? b.dataset.v : ''; }
+
+function validar(paso) {
+  const f = F.fija, pre = f.esPre !== undefined ? !!f.esPre : f.producto === 'PRE';
+  if (paso >= 2) {
+    if (!$('fechaNac').value) return 'Escribe la fecha de nacimiento del alumno.';
+    const ca = $('celAlumno').value.replace(/\D/g, '');
+    if (ca && !/^9\d{8}$/.test(ca)) return 'El celular del alumno debe tener 9 dígitos y empezar con 9.';
+    if (f.grado === 'EGRESADO' && !$('anioEgreso').value) return 'Elige el año en que terminó 5.º.';
+  }
+  if (paso >= 3) {
+    if ($('apoderado').value.trim().length < 5) return 'Escribe el nombre completo del apoderado.';
+    if (!/^\d{8}$/.test($('dniApoderado').value.replace(/\D/g, ''))) return 'El DNI del apoderado debe tener 8 dígitos.';
+    if (!vinculo()) return 'Elige el vínculo con el alumno (madre, padre u otro).';
+    if (!/^9\d{8}$/.test($('celApoderado').value.replace(/\D/g, ''))) return 'El celular del apoderado debe tener 9 dígitos y empezar con 9.';
+    if (pre && !$('carrera').value) return 'Elige la carrera (o "Aún no decide").';
+  }
+  return '';
+}
+function ir(n) {
+  const actual = [1, 2, 3, 4].find(i => !$('p' + i).classList.contains('oculto')) || 1;
+  if (n > actual && n <= 3) { const m = validar(n); if (m) { mostrarError(m); return; } }
+  limpiarError();
+  [1, 2, 3, 4].forEach(i => $('p' + i).classList.toggle('oculto', i !== n));
+  window.scrollTo(0, 0);
+}
+
+// Foto: se recorta a 3:4 y se reduce (pesa poco aunque el celular saque fotos grandes)
+$('archivo').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const img = new Image(), url = URL.createObjectURL(file);
+  img.onload = () => {
+    const W = 450, H = 600, r = W / H;
+    let sw = img.width, sh = img.height, sx = 0, sy = 0;
+    if (sw / sh > r) { sw = sh * r; sx = (img.width - sw) / 2; } else { sh = sw / r; sy = (img.height - sh) / 2; }
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    c.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
+    FOTO = c.toDataURL('image/jpeg', 0.85);
+    $('marco').innerHTML = '<img src="' + FOTO + '" alt="Foto del alumno">';
+    $('btnFoto').textContent = 'Cambiar foto';
+    URL.revokeObjectURL(url);
+  };
+  img.onerror = () => mostrarError('No se pudo leer esa imagen. Prueba con otra foto.');
+  img.src = url;
+});
+
+async function enviar() {
+  const m = validar(3); if (m) { mostrarError(m); return; }
+  if (!FOTO && !F.tieneFoto) { mostrarError('Falta la foto del alumno.'); return; }
+  if (!$('autorizaDatos').checked) { mostrarError('Para completar la matrícula marca la autorización obligatoria.'); return; }
+  const datos = {
+    fechaNac: $('fechaNac').value, celAlumno: $('celAlumno').value, correo: $('correo').value, direccion: $('direccion').value,
+    distrito: $('distrito').value, colegio: $('colegio').value, anioEgreso: $('anioEgreso').value,
+    apoderado: $('apoderado').value, dniApoderado: $('dniApoderado').value, vinculo: vinculo(), celApoderado: $('celApoderado').value,
+    carrera: $('carrera').value, universidad: $('universidad').value,
+    autorizaDatos: $('autorizaDatos').checked, autorizaPublicidad: $('autorizaPublicidad').checked
+  };
+  $('btnEnviar').disabled = true; cargando('Guardando tu ficha…');
+  try {
+    const r = await fetch(API, { method: 'POST', body: JSON.stringify({ accion: 'guardarFicha', t: T, datos: datos, foto: FOTO }) });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.msg);
+    F.tieneFoto = true; F.completa = true; FOTO = '';
+    $('listoTxt').textContent = j.nombre + ' (código ' + j.codigo + ') ya tiene su matrícula lista.';
+    let x = '';
+    if (j.urlTest) x += '<a class="btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center" href="' + esc(j.urlTest) + '">TEST VOCACIONAL</a>';
+    if (j.urlDiag) x += '<a class="btn sec" style="text-decoration:none;display:flex;align-items:center;justify-content:center" href="' + esc(j.urlDiag) + '">EXAMEN DE DIAGNÓSTICO</a>';
+    $('extras').innerHTML = x;
+    ir(4);
+  } catch (e) { mostrarError(e.message || 'No se pudo guardar. Revisa tu internet e inténtalo otra vez.'); }
+  finally { $('btnEnviar').disabled = false; cargando(''); }
+}
+iniciar();
+</script>
+</body>
+</html>
