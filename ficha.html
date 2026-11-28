@@ -162,7 +162,7 @@ async function iniciar() {
     F = await r.json();
     if (!F.ok) throw new Error(F.msg);
   } catch (e) { cargando(''); mostrarError(e.message && e.message.indexOf('Enlace') === 0 ? e.message : 'No pudimos abrir tu ficha. Revisa tu internet e inténtalo otra vez.'); return; }
-  const f = F.fija, d = F.datos, pre = f.producto === 'PRE';
+  const f = F.fija, d = F.datos, pre = f.esPre !== undefined ? !!f.esPre : f.producto === 'PRE';   // v2: PRE, 360 y CPU piden carrera
   $('hCiclo').textContent = f.ciclo; $('hSub').textContent = 'Ficha de matrícula · ' + f.productoTxt + ' · ' + f.codigo;
   let fij = '<div class="dato"><small>Código</small><b style="color:var(--az);font-size:16px">' + esc(f.codigo) + '</b></div>' +
     '<div class="dato"><small>Programa</small><b>' + esc(f.productoTxt) + '</b></div>' +
@@ -193,7 +193,7 @@ document.getElementById('vinculo').addEventListener('click', e => { const b = e.
 function vinculo() { const b = document.querySelector('#vinculo .pill.sel'); return b ? b.dataset.v : ''; }
 
 function validar(paso) {
-  const f = F.fija;
+  const f = F.fija, pre = f.esPre !== undefined ? !!f.esPre : f.producto === 'PRE';
   if (paso >= 2) {
     if (!$('fechaNac').value) return 'Escribe la fecha de nacimiento del alumno.';
     const ca = $('celAlumno').value.replace(/\D/g, '');
@@ -205,7 +205,7 @@ function validar(paso) {
     if (!/^\d{8}$/.test($('dniApoderado').value.replace(/\D/g, ''))) return 'El DNI del apoderado debe tener 8 dígitos.';
     if (!vinculo()) return 'Elige el vínculo con el alumno (madre, padre u otro).';
     if (!/^9\d{8}$/.test($('celApoderado').value.replace(/\D/g, ''))) return 'El celular del apoderado debe tener 9 dígitos y empezar con 9.';
-    if (f.producto === 'PRE' && !$('carrera').value) return 'Elige la carrera (o "Aún no decide").';
+    if (pre && !$('carrera').value) return 'Elige la carrera (o "Aún no decide").';
   }
   return '';
 }
@@ -266,4 +266,3 @@ iniciar();
 </script>
 </body>
 </html>
-
