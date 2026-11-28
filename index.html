@@ -14,7 +14,7 @@ header b{font-size:18px;letter-spacing:.5px}
 .chip{background:rgba(255,255,255,.15);padding:5px 10px;border-radius:16px;font-size:13px;font-weight:bold}
 .chip.alerta{background:var(--am);color:#1C2233}
 nav{display:flex;gap:6px;padding:10px 16px 0;flex-wrap:wrap}
-nav button{flex:1 1 140px;height:46px;border-radius:10px 10px 0 0;border:1px solid var(--bo);border-bottom:none;background:#E3E7F0;font-size:15px;font-weight:bold;color:var(--az)}
+nav button{flex:1 1 100px;min-width:0;height:46px;padding:0 4px;line-height:1.15;border-radius:10px 10px 0 0;border:1px solid var(--bo);border-bottom:none;background:#E3E7F0;font-size:13.5px;font-weight:bold;color:var(--az)}
 nav button.act{background:#fff}
 main{max-width:1100px;margin:0 auto;padding:0 16px 40px}
 .panel{background:#fff;border-radius:0 0 12px 12px;padding:18px;box-shadow:0 1px 3px rgba(20,30,60,.08)}
@@ -56,13 +56,60 @@ input:focus,select:focus{outline:2px solid var(--az)}
 #ticket img.logo{display:block;margin:0 auto 3px;width:26mm;height:auto}
 #ticket .qr{text-align:center;margin:4px 0}#ticket .qr img{width:30mm;height:30mm}
 @media print{
-  @page{size:80mm auto;margin:0}
   body{background:#fff}
-  body>*:not(#zonaTicket){display:none!important}
-  #zonaTicket{display:block!important}
+  body.pTicket>*:not(#zonaTicket){display:none!important}
+  body.pTicket #zonaTicket{display:block!important}
   #ticket{border:none;margin:0;padding:1mm 3mm}
+  body.pA4>*:not(#zonaA4){display:none!important}
+  body.pA4 #zonaA4{display:block!important;position:static;background:#fff;padding:0;overflow:visible}
+  body.pA4 #a4barra{display:none!important}
+  body.pA4 .hojaA4{box-shadow:none;margin:0;width:auto;min-height:0;padding:0}
 }
 #zonaTicket{display:none}
+/* ---------- PAGOS (beneficiario) ---------- */
+.bficha{background:#EEF1F6;border-radius:12px;padding:12px 14px;margin-top:12px;display:grid;grid-template-columns:1.3fr 1fr;gap:12px}
+.bficha .bn{font-size:20px;font-weight:bold}.bficha small{color:var(--su)}
+.bficha .l{display:flex;justify-content:space-between;padding:2px 0;gap:8px}
+.barra{height:12px;background:#dfe3ec;border-radius:6px;overflow:hidden;margin:6px 0}.barra div{height:100%;background:var(--ok)}
+@media (max-width:700px){.bficha{grid-template-columns:1fr}}
+/* ---------- FICHA A4 (blanco y negro) ---------- */
+#zonaA4{position:fixed;inset:0;z-index:8;background:#5b6170;overflow:auto;padding:0 0 30px}
+#a4barra{position:sticky;top:0;background:#1B2A6B;color:#fff;padding:10px 16px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.hojaA4{width:210mm;min-height:297mm;margin:16px auto;background:#fff;color:#000;padding:10mm 14mm;box-shadow:0 2px 10px rgba(0,0,0,.4);font-family:Arial,Helvetica,sans-serif;font-size:10.5pt}
+.hojaA4 *{box-sizing:border-box}
+.hojaA4 .cab{display:grid;grid-template-columns:26mm 1fr 30mm;gap:5mm;align-items:center;border-bottom:2px solid #000;padding-bottom:3mm}
+.hojaA4 .cab img{width:26mm}
+.hojaA4 h1{font-size:15pt;margin:0 0 1mm;letter-spacing:.5px;color:#000}
+.hojaA4 h2{font-size:11pt;margin:0 0 2mm;font-weight:normal}
+.hojaA4 .dir{font-size:8.5pt}
+.hojaA4 .foto{width:30mm;height:40mm;border:1px solid #000;display:flex;align-items:center;justify-content:center;text-align:center;font-size:8pt;overflow:hidden}
+.hojaA4 .foto img{width:100%;height:100%;object-fit:cover;filter:grayscale(1)}
+.hojaA4 .incompleta{border:2px solid #000;text-align:center;font-weight:bold;padding:1.5mm;margin-top:3mm;letter-spacing:1px}
+.hojaA4 .claves{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #000;border-top:none;margin-bottom:4mm}
+.hojaA4 .claves div{padding:1.6mm 2mm;border-right:1px solid #000}
+.hojaA4 .claves div:nth-child(4n){border-right:none}
+.hojaA4 .claves div:nth-child(n+5){border-top:1px solid #000}
+.hojaA4 small{display:block;font-size:7pt;text-transform:uppercase;letter-spacing:.3px;color:#000}
+.hojaA4 .claves b{font-size:11pt}
+.hojaA4 .sec{margin-bottom:3.5mm}
+.hojaA4 h3{font-size:9.5pt;margin:0;padding:1.2mm 2mm;border:1px solid #000;border-bottom:none;text-transform:uppercase;letter-spacing:.6px;color:#000}
+.hojaA4 .grid{display:grid;border-top:1px solid #000;border-left:1px solid #000}
+.hojaA4 .g2{grid-template-columns:1fr 1fr}.hojaA4 .g4{grid-template-columns:repeat(4,1fr)}
+.hojaA4 .campo{padding:1.2mm 2mm;border-right:1px solid #000;border-bottom:1px solid #000;min-height:8.5mm}
+.hojaA4 .a2{grid-column:span 2}.hojaA4 .a3{grid-column:span 3}.hojaA4 .a4{grid-column:span 4}
+.hojaA4 .pago{width:100%;border-collapse:collapse;border:1px solid #000}
+.hojaA4 .pago td{padding:1.1mm 2mm;border-bottom:1px solid #000}
+.hojaA4 .pago td.m{text-align:right;width:30mm;white-space:nowrap}
+.hojaA4 .pago td.sub{padding-left:6mm;font-size:9pt}
+.hojaA4 .pago tr.total td{font-weight:bold;border-top:2px solid #000}
+.hojaA4 .dos{display:grid;grid-template-columns:1.15fr 1fr;gap:4mm}
+.hojaA4 .aut{border:1px solid #000;padding:2mm;font-size:8.8pt;line-height:1.35}
+.hojaA4 .aut p{margin:0 0 2mm;display:flex;gap:2mm}
+.hojaA4 .cx{flex:0 0 4mm;height:4mm;border:1px solid #000;text-align:center;line-height:4mm;font-weight:bold;font-size:9pt}
+.hojaA4 .firmas{display:grid;grid-template-columns:1fr 1fr;gap:14mm;margin-top:11mm;break-inside:avoid}
+.hojaA4 .firmas div{border-top:1px solid #000;padding-top:1.5mm;text-align:center;font-size:9pt}
+.hojaA4 .pie{margin-top:5mm;border-top:1px solid #000;padding-top:1.5mm;font-size:7.5pt;display:flex;justify-content:space-between}
+.hojaA4 .nota{font-size:8pt;margin-top:1.5mm}
 </style>
 </head>
 <body>
@@ -104,6 +151,8 @@ input:focus,select:focus{outline:2px solid var(--az)}
   <button data-t="tSal" onclick="tab('tSal')">3 · Cobrar saldo</button>
   <button data-t="tHoy" onclick="tab('tHoy')">Recibos de hoy</button>
   <button data-t="tRec" onclick="tab('tRec')">Recordatorios <span id="nRec"></span></button>
+  <button data-t="tEgr" onclick="tab('tEgr')">Pagos</button>
+  <button data-t="tPen" onclick="tab('tPen')">Pendientes del periodo</button>
   <button data-t="tCie" onclick="tab('tCie')">Cierre de caja</button>
 </nav>
 <main>
@@ -119,7 +168,7 @@ input:focus,select:focus{outline:2px solid var(--az)}
     <div id="infQuien"></div>
     <div class="fila">
       <div><label>Apellidos y nombres</label><input id="infNom"></div>
-      <div><label>DNI (si lo sabe)</label><input id="infDni" inputmode="numeric"></div>
+      <div><label>DNI (si lo sabe)</label><input id="infDni" inputmode="numeric" onchange="verificarFamilia('inf')"></div>
     </div>
     <div class="fila">
       <div><label>Celular / WhatsApp</label><input id="infCel" inputmode="numeric"></div>
@@ -127,11 +176,11 @@ input:focus,select:focus{outline:2px solid var(--az)}
     </div>
     <label>Producto</label>
     <div class="ops" data-grupo="infProd">
-      <button class="op sel" data-v="PRE">Preuniversitario</button><button class="op" data-v="ESCOLAR">Ciclo escolar (School / High School)</button>
+      <button class="op sel" data-v="PRE">PRE Full Day</button><button class="op" data-v="360">Programa 360</button><button class="op" data-v="CPU">Programa CPU</button><button class="op" data-v="ESCOLAR">Ciclo escolar (School / High School)</button>
     </div>
     <label id="infGradoLbl">¿Qué hará el alumno en el año escolar 2027?</label>
     <div class="ops" data-grupo="infGrado"></div>
-    <label class="check soloPre"><input type="checkbox" id="infHer" onchange="previewInf()"> Es 2.º hermano (−S/ <span class="vHer"></span>)</label>
+    <label class="check soloHer"><input type="checkbox" id="infHer" onchange="previewInf()"> Es 2.º hermano (−S/ <span class="vHer"></span>)</label>
     <div id="infPrecio"></div>
     <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn ok gr" onclick="cotizar()">Generar e imprimir cotización</button>
@@ -156,7 +205,7 @@ input:focus,select:focus{outline:2px solid var(--az)}
     <div id="cobQuien"></div>
     <div class="fila">
       <div><label>Apellidos y nombres (como en el DNI)</label><input id="cobNom"></div>
-      <div><label>DNI o carné de extranjería</label><input id="cobDni" inputmode="numeric"></div>
+      <div><label>DNI o carné de extranjería</label><input id="cobDni" inputmode="numeric" onchange="verificarFamilia('cob')"></div>
     </div>
     <div class="fila">
       <div><label>WhatsApp del apoderado (para enviarle la ficha)</label><input id="cobCel" inputmode="numeric"></div>
@@ -164,16 +213,16 @@ input:focus,select:focus{outline:2px solid var(--az)}
     </div>
     <label>Producto</label>
     <div class="ops" data-grupo="cobProd">
-      <button class="op sel" data-v="PRE">Preuniversitario</button><button class="op" data-v="ESCOLAR">Ciclo escolar (School / High School)</button>
+      <button class="op sel" data-v="PRE">PRE Full Day</button><button class="op" data-v="360">Programa 360</button><button class="op" data-v="CPU">Programa CPU</button><button class="op" data-v="ESCOLAR">Ciclo escolar (School / High School)</button>
     </div>
     <label id="cobGradoLbl">¿Qué hará el alumno en el año escolar 2027? (define el precio)</label>
     <div class="ops" data-grupo="cobGrado"></div>
     <div class="fila">
       <div class="soloPre"><label>Beca social (solo casos autorizados por Omar)</label>
-        <select id="cobBeca" onchange="previewCob()"><option value="NO">No</option><option value="COMPLETA">Beca completa (S/ 50)</option><option value="MEDIA">Media beca (S/ 375)</option></select></div>
+        <select id="cobBeca" onchange="previewCob()"><option value="NO">No</option><option value="COMPLETA">Beca completa (S/ 50)</option><option value="MEDIA">Media beca (S/ <span class="vMedia">400</span>)</option></select></div>
       <div><label>Libro y merchandising</label><select id="cobLib"><option value="ENTREGADO">Entregado hoy</option><option value="POR RECOGER">Por recoger</option></select></div>
     </div>
-    <label class="check soloPre"><input type="checkbox" id="cobHer" onchange="previewCob()"> Es 2.º hermano (−S/ <span class="vHer"></span>)</label>
+    <label class="check soloHer"><input type="checkbox" id="cobHer" onchange="previewCob()"> Es 2.º hermano (−S/ <span class="vHer"></span>)</label>
     <div id="cobHerBox" class="oculto"><label>Código del Verano 2027 del hermano ya matriculado</label><input id="cobHerCod" inputmode="numeric"></div>
     <label>Modalidad de pago</label>
     <div class="ops" data-grupo="cobMod">
@@ -249,6 +298,53 @@ input:focus,select:focus{outline:2px solid var(--az)}
   <div id="recRes"></div>
 </section>
 
+<!-- ---------- PAGOS (EGRESOS v2 – por código) ---------- -->
+<section id="tEgr" class="panel oculto">
+  <h3>Registrar un pago</h3>
+  <p style="font-size:13px;color:var(--su);margin:0">Escribe el código (DOC, ADM, LOC, SRV u OTR). La lista oficial está en la hoja BENEFICIARIOS. Cada pago avisa a Omar por correo.</p>
+  <div class="card">
+    <div class="fila" style="align-items:end">
+      <div><label>Código del beneficiario</label><input id="egCod" list="egCodL" autocomplete="off" placeholder="Ej.: DOC-02" style="text-transform:uppercase" onkeydown="if(event.key==='Enter')verBenef()" onchange="verBenef()"><datalist id="egCodL"></datalist></div>
+      <div style="flex:0 0 150px"><button class="btn" style="width:100%" onclick="verBenef()">Ver</button></div>
+    </div>
+    <div id="egFicha"></div>
+    <div id="egForm" class="oculto">
+      <div class="fila">
+        <div id="egPerBox"><label>Periodo</label><select id="egPer" onchange="verBenef($('egPer').value)"></select></div>
+        <div id="egHorBox" class="oculto"><label>Horas dictadas</label><input id="egHor" inputmode="decimal" placeholder="Ej.: 4.5" oninput="sugerirMonto()"></div>
+        <div><label>Monto a pagar (S/)</label><input id="egMon" inputmode="decimal"></div>
+      </div>
+      <div class="fila">
+        <div><label>Medio</label><select id="egMed" onchange="$('egOpBox').classList.toggle('oculto', this.value==='EFECTIVO')"></select></div>
+        <div id="egOpBox" class="oculto"><label>N.° de operación</label><input id="egOp"></div>
+      </div>
+      <label id="egDescLbl">Descripción</label><input id="egNota" placeholder="Qué se pagó o a quién">
+      <div id="egForzarBox" class="oculto card" style="border-color:#E0A800">
+        <label class="check" style="margin-top:0"><input type="checkbox" id="egForzar"> Forzar el pago (solo Gerente)</label>
+        <label>Motivo</label><input id="egMotivo" placeholder="Ej.: pago adicional por reemplazo">
+      </div>
+      <div style="margin-top:14px"><button class="btn ok gr" id="btnEgr" onclick="registrarEgreso()">Registrar pago e imprimir comprobante</button></div>
+    </div>
+    <div id="egMsg"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:16px">
+    <h3 style="margin:0" id="egLTit">Pagos sin cerrar</h3>
+    <div style="display:flex;gap:8px"><input id="egN" placeholder="N.° de egreso" style="width:140px">
+    <button class="btn sec" onclick="reimprimirEgreso($('egN').value)">Reimprimir</button>
+    <button class="btn" onclick="cargarEgresos()">Actualizar</button></div>
+  </div>
+  <div id="egLista"></div>
+</section>
+
+<!-- ---------- PENDIENTES DEL PERIODO ---------- -->
+<section id="tPen" class="panel oculto">
+  <div class="fila" style="align-items:end">
+    <div><label>Ver</label><select id="penCual" onchange="cargarPendientes()"><option value="actual">Periodo actual</option><option value="anterior">Periodo anterior</option></select></div>
+    <div style="flex:0 0 150px"><button class="btn" style="width:100%" onclick="cargarPendientes()">Actualizar</button></div>
+  </div>
+  <div id="penRes"></div>
+</section>
+
 <!-- ---------- CIERRE ---------- -->
 <section id="tCie" class="panel oculto">
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
@@ -271,6 +367,12 @@ input:focus,select:focus{outline:2px solid var(--az)}
 
 <!-- Zona que se imprime -->
 <div id="zonaTicket"><div id="ticket"></div></div>
+<div id="zonaA4" class="oculto">
+  <div id="a4barra"><b>Ficha de matrícula (A4)</b><div style="display:flex;gap:8px">
+    <button class="btn ok" onclick="imprimirA4()">Imprimir o guardar PDF</button>
+    <button class="btn sec" onclick="cerrarA4()">Cerrar</button></div></div>
+  <div class="hojaA4" id="hojaA4"></div>
+</div>
 
 <script>
 // ===================== ESTADO =====================
@@ -284,13 +386,39 @@ const GRADO_TXT = { '5TO': 'Estudiará 5.º de secundaria', '4TO_O_MENOS': 'Estu
   'PASA_1': 'Pasará a 1.º de secundaria', 'PASA_2': 'Pasará a 2.º de secundaria', 'PASA_3': 'Pasará a 3.º de secundaria', 'PASA_4': 'Pasará a 4.º de secundaria' };
 const BOTONES_GRADO = {
   PRE: '<button class="op" data-v="5TO">Estudiará 5.º</button><button class="op" data-v="4TO_O_MENOS">4.º o menos</button><button class="op" data-v="EGRESADO">Ya terminó (egresado)</button>',
+  '360': '', CPU: '',
   ESCOLAR: '<button class="op" data-v="PASA_1">Pasará a 1.º</button><button class="op" data-v="PASA_2">Pasará a 2.º</button><button class="op" data-v="PASA_3">Pasará a 3.º</button><button class="op" data-v="PASA_4">Pasará a 4.º</button>' };
+BOTONES_GRADO['360'] = BOTONES_GRADO.CPU = BOTONES_GRADO.PRE;
+function K_() { return S.est.precios.K; }
 function ponerProducto(pre, prod) {
+  prod = grupoProducto(prod);
   ponerOp(pre + 'Prod', prod);
   document.querySelector('[data-grupo="' + pre + 'Grado"]').innerHTML = BOTONES_GRADO[prod];
-  $(pre + 'GradoLbl').textContent = prod === 'PRE' ? '¿Qué hará el alumno en el año escolar 2027? (define el precio)' : '¿A qué grado pasará en 2027? (1.º-2.º = FAUSTINO SCHOOL · 3.º-4.º = FAUSTINO HIGH SCHOOL)';
-  document.querySelectorAll('#' + (pre === 'inf' ? 'infForm' : 'cobForm') + ' .soloPre').forEach(x => x.classList.toggle('oculto', prod !== 'PRE'));
-  if (prod !== 'PRE') { if (pre === 'cob') { $('cobBeca').value = 'NO'; $('cobHer').checked = false; } else $('infHer').checked = false; }
+  $(pre + 'GradoLbl').textContent = prod !== 'ESCOLAR' ? '¿Qué hará el alumno en el año escolar 2027? (define el precio)' : '¿A qué grado pasará en 2027? (1.º-2.º = FAUSTINO SCHOOL · 3.º-4.º = FAUSTINO HIGH SCHOOL)';
+  const form = '#' + (pre === 'inf' ? 'infForm' : 'cobForm');
+  const conHer = K_().hermano.indexOf(prod) >= 0, conDos = K_().dosPartes.indexOf(prod) >= 0 || prod === 'ESCOLAR';
+  document.querySelectorAll(form + ' .soloPre').forEach(x => x.classList.toggle('oculto', prod !== 'PRE'));
+  document.querySelectorAll(form + ' .soloHer').forEach(x => x.classList.toggle('oculto', !conHer));
+  if (pre === 'cob') {
+    const b2 = document.querySelector('[data-grupo="cobMod"] [data-v="2PARTES"]'); if (b2) b2.classList.toggle('oculto', !conDos);
+    if (prod !== 'PRE') $('cobBeca').value = 'NO';
+    if (!conHer) $('cobHer').checked = false;
+    if (!conDos) ponerOp('cobMod', 'CONTADO');
+  } else if (!conHer) $('infHer').checked = false;
+}
+// Familia Faustino por DNI (la caja lo detecta sola; el cajero no lo elige)
+async function verificarFamilia(donde) {
+  const r = S.sel[donde]; if (!r || r.codigo) return;
+  const dni = $(donde + 'Dni').value.replace(/\s/g, '');
+  if (dni.replace(/\D/g, '').length < 8) return;
+  try {
+    const j = await api('familia', { dni });
+    if (j.familia) {
+      r.familia = true; r.codigo = j.codigo;
+      $(donde + 'Quien').innerHTML = '<div class="msg ok"><b>Precio Familia Faustino</b> · ' + esc(j.nombre) + ' ya está en la base (código ' + esc(j.codigo) + ', se mantiene).</div>';
+      if (donde === 'inf') previewInf(); else previewCob();
+    }
+  } catch (e) { }
 }
 
 function mostrar(v) { ['vConfig', 'vLogin', 'vApp'].forEach(x => $(x).classList.toggle('oculto', x !== v)); if (v === 'vConfig') $('cfgUrl').value = S.api; }
@@ -307,7 +435,7 @@ async function api(accion, params, d) {
   let r;
   try { r = await fetch(u.toString()); } catch (e) { throw new Error('Sin conexión con el sistema. Revisa el internet y vuelve a intentar.'); }
   const j = await r.json();
-  if (!j.ok) throw new Error(j.msg || 'Error');
+  if (!j.ok) { const e = new Error(j.msg || 'Error'); e.datos = j; throw e; }
   return j;
 }
 
@@ -342,6 +470,8 @@ async function login() {
   $('hCiclo').textContent = j.ciclo; $('hCaj').textContent = j.cajero + (j.nombre ? ' · ' + j.nombre : '');
   document.querySelectorAll('.vHer').forEach(x => x.textContent = j.precios.descHermano);
   document.querySelectorAll('.vRec').forEach(x => x.textContent = j.precios.recargo);
+  const om = document.querySelector('#cobBeca option[value="MEDIA"]'); if (om) om.textContent = 'Media beca (S/ ' + j.precios.becaMedia + ')';
+  const oc = document.querySelector('#cobBeca option[value="COMPLETA"]'); if (oc) oc.textContent = 'Beca completa (S/ ' + j.precios.becaCompleta + ')';
   pintarVacantes(j.usadas, j.vacantes); pintarEscolar(j.escolar);
   mostrar('vApp');
   contarRec();
@@ -364,6 +494,8 @@ function tab(t) {
   if (t === 'tHoy') cargarHoy();
   if (t === 'tRec') cargarRec();
   if (t === 'tCie') cargarCierre();
+  if (t === 'tEgr') abrirEgresos();
+  if (t === 'tPen') cargarPendientes();
 }
 
 // Botones de opción (grado y modalidad)
@@ -378,45 +510,111 @@ function valorOp(grupo) { const b = document.querySelector('[data-grupo="' + gru
 function ponerOp(grupo, v) { document.querySelectorAll('[data-grupo="' + grupo + '"] .op').forEach(x => x.classList.toggle('sel', x.dataset.v === v)); }
 
 // ===================== PRECIO (vista previa; el servidor confirma) =====================
-function precioLocal(d) {
-  const c = S.est.precios, usadas = S.est.usadas;
-  if (!d.grado) return null;
-  if (d.producto === 'ESCOLAR') {
-    if (d.grado.indexOf('PASA_') !== 0) return null;
-    const promo = c.escPromoActiva || d.cotPreferencial, dos = d.modalidad === '2PARTES' && promo;
-    const total = !promo ? c.escLista : (dos ? c.esc2 : c.escContado);
-    return { producto: 'ESCOLAR', lista: c.escLista, desglose: c.desgloseEsc, tipo: promo ? 'PREFERENCIAL' : 'LISTA', descPromo: promo ? c.escLista - c.escContado : 0,
-      descPromoTxt: 'Promoción', descHermano: 0, recargo: dos ? c.esc2 - c.escContado : 0, modalidad: dos ? '2PARTES' : 'CONTADO',
-      total: total, hoy: dos ? c.esc1ra : total, saldo: dos ? total - c.esc1ra : 0, sinPromo: !promo };
+// ===== PRECIO VERANO 2027 – misma función en el motor y en la pantalla (BITÁCORA 27/11) =====
+// Precio normal = matrícula + material + ciclo. Promoción: matrícula y material GRATIS.
+// K = catálogo que arma el motor desde CONFIG_CAJA (catalogo_).
+function grupoProducto(p) { return p === 'SCHOOL' || p === 'HIGH SCHOOL' || p === 'ESCOLAR' ? 'ESCOLAR' : (p || 'PRE'); }
+function nombreProducto(K, p, grado) {
+  if (p === 'PRE') return 'PRE Full Day · ' + (grado === 'EGRESADO' ? 'Ordinario' : 'Quinto');
+  return (K.nombres && K.nombres[p]) || p;
+}
+function lineasPromo(K, prod, grado, familia, descPromo, tipo, categoria) {
+  descPromo = Number(descPromo) || 0;
+  if (!(descPromo > 0)) return [];
+  if (tipo === 'BECA SOCIAL') return [[categoria || 'Beca social', descPromo]];
+  const P = K.prods[grupoProducto(prod)];
+  if (!P) return [['Promoción', descPromo]];
+  const quinto = grado !== 'EGRESADO';
+  const mm = Math.min(descPromo, P.mat + P.material);
+  let fam = 0;
+  if (familia) {
+    const nu = prod === 'PRE' ? (quinto ? P.nuevoQui : P.nuevoOrd) : P.nuevo;
+    const fa = prod === 'PRE' ? (quinto ? P.famQui : P.famOrd) : P.familia;
+    fam = Math.max(0, Math.min(descPromo - mm, nu - fa));
   }
-  if (d.grado.indexOf('PASA_') === 0) return null;
-  const egr = d.grado === 'EGRESADO', r = { lista: c.lista, desglose: c.desglosePre, descHermano: 0, recargo: 0 };
+  const camp = Math.round((descPromo - mm - fam) * 100) / 100;
+  const r = [['Promoción: matrícula y material GRATIS', mm]];
+  if (camp > 0) r.push([prod === 'PRE' && quinto ? 'Precio Quinto de Secundaria' : 'Precio de campaña', camp]);
+  if (fam > 0) r.push(['Precio Familia Faustino', fam]);
+  return r;
+}
+// d: {producto: 'PRE'|'360'|'CPU'|'ESCOLAR', grado, familia, hermano, beca, modalidad, cotPreferencial}
+function calcPrecio(K, d, usadas) {
+  const sel = grupoProducto(d.producto);
+  const P = K.prods[sel];
+  if (!P) throw new Error('Producto no válido: ' + d.producto);
+  const dos = d.modalidad === '2PARTES';
+  const r = { grupo: sel, descHermano: 0, recargo: 0, familia: !!d.familia, grado: d.grado, usadas: usadas, vacantes: K.vacantes };
+  if (sel === 'ESCOLAR') {
+    if (['PASA_1', 'PASA_2', 'PASA_3', 'PASA_4'].indexOf(d.grado) < 0) throw new Error('Elige a qué grado pasará el alumno (1.º, 2.º, 3.º o 4.º)');
+    if (d.hermano) throw new Error('El ciclo escolar no tiene descuento de hermano');
+    if (d.beca && d.beca !== 'NO') throw new Error('El ciclo escolar no tiene beca social');
+    r.producto = d.grado === 'PASA_1' || d.grado === 'PASA_2' ? 'SCHOOL' : 'HIGH SCHOOL';
+  } else {
+    if (['5TO', '4TO_O_MENOS', 'EGRESADO'].indexOf(d.grado) < 0) throw new Error('Elige qué hará el alumno en el año escolar 2027');
+    r.producto = sel;
+  }
+  r.nombre = nombreProducto(K, r.producto, d.grado);
+  r.lista = P.mat + P.material + P.ciclo;
+  r.desglose = [['Matrícula', P.mat], ['Material', P.material], ['Ciclo', P.ciclo]];
+  const quinto = d.grado !== 'EGRESADO';
+  r.categoria = (d.familia ? 'Familia Faustino' : 'Alumno nuevo') + (r.producto === 'PRE' ? (quinto ? ' · Quinto' : ' · Ordinario') : '');
   if (d.beca === 'COMPLETA' || d.beca === 'MEDIA') {
-    const t = d.beca === 'COMPLETA' ? c.becaCompleta : c.becaMedia;
-    return Object.assign(r, { tipo: 'BECA SOCIAL', descPromo: c.lista - t, descPromoTxt: d.beca === 'COMPLETA' ? 'Beca social completa' : 'Media beca social', modalidad: 'CONTADO', total: t, hoy: t, saldo: 0 });
+    if (r.producto !== 'PRE') throw new Error('La BECA SOCIAL es solo para el PRE Full Day');
+    if (dos) throw new Error('La BECA SOCIAL se paga al contado');
+    const t = d.beca === 'COMPLETA' ? K.becaCompleta : K.becaMedia;
+    r.tipo = 'BECA SOCIAL'; r.categoria = d.beca === 'COMPLETA' ? 'Beca social completa' : 'Media beca social';
+    r.descPromo = r.lista - t; r.lineas = lineasPromo(K, r.producto, d.grado, false, r.descPromo, r.tipo, r.categoria);
+    r.modalidad = 'CONTADO'; r.total = t; r.hoy = t; r.saldo = 0; r.cuentaVacante = false;
+    return r;
   }
-  const precioCat = d.familia ? (egr ? c.exEgr : c.exEsc) : (egr ? c.nuEgr : c.nuEsc);
-  const pref = usadas < S.est.vacantes || d.cotPreferencial;
-  const base = pref ? precioCat : c.lista;
+  if (dos && sel !== 'ESCOLAR' && K.dosPartes.indexOf(sel) < 0) throw new Error(r.nombre + ' se paga al contado');
+  if (d.hermano && K.hermano.indexOf(sel) < 0) throw new Error('El descuento de 2.º hermano es solo para ' + K.hermano.join(', '));
+  r.cuentaVacante = K.cuentanVacante.indexOf(sel) >= 0;
+  let pref, base;
+  if (sel === 'ESCOLAR') {
+    pref = P.promoActiva || !!d.cotPreferencial;
+    if (!pref && dos) throw new Error('Sin promoción, el ciclo escolar se paga al contado');
+    base = pref ? (d.familia ? P.familia : P.nuevo) : r.lista;
+    r.total = pref && dos ? P.dos : base;
+    r.recargo = pref && dos ? r.total - base : 0;
+    r.hoy = dos ? P.primera : r.total;
+  } else {
+    const hayVacante = !r.cuentaVacante || usadas < K.vacantes;
+    pref = hayVacante || !!d.cotPreferencial;
+    r.porCotizacion = pref && !hayVacante;
+    const nuevo = sel === 'PRE' ? (quinto ? P.nuevoQui : P.nuevoOrd) : P.nuevo;
+    const fam = sel === 'PRE' ? (quinto ? P.famQui : P.famOrd) : P.familia;
+    base = pref ? (d.familia ? fam : nuevo) : r.lista;
+    r.descHermano = d.hermano ? K.descHermano : 0;
+    r.recargo = dos ? K.recargo : 0;
+    r.total = base - r.descHermano + r.recargo;
+    r.hoy = dos ? Math.round(r.total * K.porc) : r.total;
+  }
   r.tipo = pref ? 'PREFERENCIAL' : 'LISTA';
-  r.descPromo = c.lista - base; r.descPromoTxt = pref ? (d.familia ? 'Promo Familia FP' : 'Promo alumno nuevo') : '';
-  r.descHermano = d.hermano ? c.descHermano : 0;
-  r.modalidad = d.modalidad === '2PARTES' ? '2PARTES' : 'CONTADO';
-  r.recargo = r.modalidad === '2PARTES' ? c.recargo : 0;
-  r.total = base - r.descHermano + r.recargo;
-  r.hoy = r.modalidad === '2PARTES' ? Math.round(r.total * c.porc) : r.total;
+  r.modalidad = dos ? '2PARTES' : 'CONTADO';
+  r.descPromo = r.lista - base;
+  r.lineas = lineasPromo(K, r.producto, d.grado, d.familia, r.descPromo, r.tipo, r.categoria);
   r.saldo = r.total - r.hoy;
   return r;
 }
+// ===== fin PRECIO =====
+
+function precioLocal(d) {
+  if (!d.grado) return null;
+  try { return calcPrecio(K_(), d, S.est.usadas); } catch (e) { return { error: e.message }; }
+}
 function htmlPrecio(p) {
-  let h = '<div class="precio"><div><span>Precio de lista</span><span>' + soles(p.lista) + '</span></div>' +
+  if (p.error) return '<div class="msg no">' + esc(p.error) + '</div>';
+  let h = '<div class="precio"><div style="font-size:13px;color:var(--su)"><span>' + esc(p.nombre) + ' · ' + (p.tipo === 'BECA SOCIAL' ? esc(p.categoria) : (p.familia ? 'Precio Familia Faustino' : 'Alumno nuevo')) + '</span><span></span></div>' +
+    '<div><span>Precio normal</span><span>' + soles(p.lista) + '</span></div>' +
     (p.desglose || []).map(x => '<div style="font-size:13px;color:var(--su);padding-left:14px"><span>' + x[0] + '</span><span>' + soles(x[1]) + '</span></div>').join('');
-  if (p.descPromo) h += '<div><span>' + esc(p.descPromoTxt) + '</span><span>−' + soles(p.descPromo) + '</span></div>';
+  (p.lineas || []).forEach(x => { h += '<div><span>' + esc(x[0]) + '</span><span>−' + soles(x[1]) + '</span></div>'; });
   if (p.descHermano) h += '<div><span>Descuento 2.º hermano</span><span>−' + soles(p.descHermano) + '</span></div>';
   if (p.recargo) h += '<div><span>Pago en 2 partes</span><span>+' + soles(p.recargo) + '</span></div>';
   h += '<div class="tot"><span>Total</span><span>' + soles(p.total) + '</span></div>';
   if (p.saldo > 0) h += '<div><span>Hoy (1.ª parte)</span><span>' + soles(p.hoy) + '</span></div><div><span>Saldo a ' + S.est.precios.dias2 + ' días</span><span>' + soles(p.saldo) + '</span></div>';
-  if (p.tipo === 'LISTA') h += '<div style="color:#8E1B1B;font-weight:bold">' + (p.producto === 'ESCOLAR' ? 'Sin promoción: solo al contado.' : 'Ya se usaron las ' + S.est.vacantes + ' matrículas con precio especial.') + '</div>';
+  if (p.tipo === 'LISTA') h += '<div style="color:#8E1B1B;font-weight:bold">' + (p.grupo === 'ESCOLAR' ? 'Sin promoción: solo al contado.' : 'Ya se usaron las vacantes con precio especial (aviso interno).') + '</div>';
   return h + '</div>';
 }
 
@@ -431,13 +629,18 @@ async function buscar(donde) {
     let h = '';
     j.res.forEach((r, i) => {
       if (donde === 'sal' && !r.matriculado) return;
-      let tags = r.familia ? '<span class="tag ok">Familia FP</span>' : '<span class="tag">Nuevo</span>';
+      let tags = r.familia ? '<span class="tag ok">Familia Faustino</span>' : '<span class="tag">Nuevo</span>';
       if (r.matriculado) tags += r.saldo > 0 ? '<span class="tag am">Matriculado · debe ' + soles(r.saldo) + '</span>' : '<span class="tag ok">Ya matriculado</span>';
       if (r.cot) tags += '<span class="tag am">Cotización ' + r.cot.n + ' vigente hasta ' + r.cot.vence + '</span>';
       let btn = '';
       if (donde === 'inf' && !r.matriculado) btn = '<button class="btn" onclick="elegir(\'inf\',' + i + ')">Cotizar</button>';
       if (donde === 'cob' && !r.matriculado) btn = '<button class="btn ok" onclick="elegir(\'cob\',' + i + ')">Matricular</button>';
       if (donde === 'sal' && r.saldo > 0) btn = '<button class="btn ok" onclick="elegir(\'sal\',' + i + ')">Cobrar saldo</button>';
+      if (r.matriculado && r.codigo) {
+        tags += '<span class="tag' + (r.estadoFicha === 'COMPLETA' ? ' ok">Ficha completa' : ' am">Ficha pendiente') + '</span>' +
+          '<span class="tag' + (/^IMPRESO/.test(r.carnet || '') ? ' ok' : ' am') + '">Carnet: ' + esc(String(r.carnet || 'PENDIENTE').toLowerCase()) + '</span>';
+        btn = '<div style="display:flex;gap:8px;flex-wrap:wrap">' + btn + '<button class="btn sec" onclick="verFicha(\'' + esc(r.codigo) + '\')">Imprimir ficha</button></div>';
+      }
       h += '<div class="res"><div><div class="n">' + esc(r.nombre) + '</div><small>' + (r.codigo ? 'Código ' + esc(r.codigo) + ' · ' : '') +
         (r.dni ? 'DNI ' + esc(r.dni) + ' · ' : '') + esc(r.colegio || '') + (r.ultimo ? ' · Último: ' + esc(r.ultimo) : '') + '</small><div style="margin-top:4px">' + tags + '</div></div>' + btn + '</div>';
     });
@@ -453,18 +656,18 @@ function elegir(donde, i) {
   const r = i >= 0 ? S.buscados[donde][i] : { codigo: '', nombre: $(donde + 'Q').value.replace(/\d/g, '').trim(), dni: (($(donde + 'Q').value.match(/\d{8,}/) || [''])[0]), familia: false, cot: null };
   if (r.soloCotizacion) r.familia = false;
   S.sel[donde] = r;
-  const quien = '<div class="msg ' + (r.familia ? 'ok' : 'am') + '"><b>' + (r.familia ? 'Familia Faustino Pre' : 'Alumno nuevo') + '</b>' +
+  const quien = '<div class="msg ' + (r.familia ? 'ok' : 'am') + '"><b>' + (r.familia ? 'Precio Familia Faustino' : 'Alumno nuevo') + '</b>' +
     (r.codigo ? ' · código ' + esc(r.codigo) + ' (se mantiene)' : ' · recibirá un código nuevo al pagar') +
     (r.cot ? '<br>Cotización N.° ' + esc(r.cot.n) + ' vigente hasta ' + esc(r.cot.vence) + ': <b>respeta su precio</b>.' : '') + '</div>';
   if (donde === 'inf') {
     $('infQuien').innerHTML = quien; $('infNom').value = r.nombre || ''; $('infDni').value = r.dni || '';
-    $('infCel').value = r.cel || ''; $('infCol').value = r.colegio || ''; ponerProducto('inf', r.cot && r.cot.producto && r.cot.producto !== 'PRE' ? 'ESCOLAR' : 'PRE'); $('infHer').checked = false;
+    $('infCel').value = r.cel || ''; $('infCol').value = r.colegio || ''; ponerProducto('inf', r.cot && r.cot.producto ? grupoProducto(r.cot.producto) : 'PRE'); $('infHer').checked = false;
     $('infForm').classList.remove('oculto'); aviso('infMsg', '', ''); previewInf();
     $('infForm').scrollIntoView({ behavior: 'smooth' });
   } else if (donde === 'cob') {
     $('cobQuien').innerHTML = quien; $('cobNom').value = r.nombre || ''; $('cobDni').value = String(r.dni || '').replace(/\D/g, '');
     $('cobCel').value = r.cel || ''; $('cobCol').value = r.colegio || '';
-    ponerProducto('cob', r.producto || (r.cot && r.cot.producto && r.cot.producto !== 'PRE' ? 'ESCOLAR' : 'PRE')); ponerOp('cobGrado', r.cot ? r.cot.grado : ''); ponerOp('cobMod', 'CONTADO'); $('cobBeca').value = 'NO'; $('cobHer').checked = false; $('cobHerCod').value = '';
+    ponerProducto('cob', r.producto || (r.cot && r.cot.producto ? grupoProducto(r.cot.producto) : 'PRE')); ponerOp('cobGrado', r.cot ? r.cot.grado : ''); ponerOp('cobMod', 'CONTADO'); $('cobBeca').value = 'NO'; $('cobHer').checked = false; $('cobHerCod').value = '';
     $('mixto').checked = false; mixtoCob(); ['p1o', 'p2m', 'p2o'].forEach(x => $(x).value = ''); $('p1f').value = 'EFECTIVO';
     $('cobPaso1').classList.add('oculto'); $('cobListo').classList.add('oculto'); $('cobForm').classList.remove('oculto');
     aviso('cobMsg', '', ''); previewCob(); window.scrollTo(0, 0);
@@ -480,18 +683,18 @@ function elegir(donde, i) {
 function datosInf() {
   const r = S.sel.inf || {};
   const prod = valorOp('infProd') || 'PRE';
-  return { producto: prod, familia: !!r.familia, grado: valorOp('infGrado'), hermano: prod === 'PRE' && $('infHer').checked, cotPreferencial: !!(r.cot && r.cot.tipo === 'PREFERENCIAL' && (r.cot.producto === 'PRE') === (prod === 'PRE')) };
+  return { producto: prod, familia: !!r.familia, grado: valorOp('infGrado'), hermano: K_().hermano.indexOf(prod) >= 0 && $('infHer').checked, cotPreferencial: !!(r.cot && r.cot.tipo === 'PREFERENCIAL' && grupoProducto(r.cot.producto) === prod) };
 }
 function previewInf() {
   const d = datosInf();
   const p1 = precioLocal(Object.assign({ modalidad: 'CONTADO' }, d)), p2 = precioLocal(Object.assign({ modalidad: '2PARTES' }, d));
   if (!p1) { $('infPrecio').innerHTML = '<div class="msg am">Elige el grado para ver el precio.</div>'; return; }
-  $('infPrecio').innerHTML = htmlPrecio(p1) + (p2.modalidad !== '2PARTES' ? '' : '<div class="precio"><div><b>En 2 partes</b><b>' + soles(p2.total) + '</b></div><div><span>Primera cuota (hoy)</span><span>' + soles(p2.hoy) + '</span></div><div><span>Segunda cuota a ' + S.est.precios.dias2 + ' días</span><span>' + soles(p2.saldo) + '</span></div></div>');
+  $('infPrecio').innerHTML = htmlPrecio(p1) + (p1.error || !p2 || p2.error || p2.modalidad !== '2PARTES' ? '' : '<div class="precio"><div><b>En 2 partes</b><b>' + soles(p2.total) + '</b></div><div><span>Primera cuota (hoy)</span><span>' + soles(p2.hoy) + '</span></div><div><span>Segunda cuota a ' + S.est.precios.dias2 + ' días</span><span>' + soles(p2.saldo) + '</span></div></div>');
 }
 async function cotizar() {
   const r = S.sel.inf || {};
   const d = { codigo: r.codigo || '', nombre: $('infNom').value.trim(), dni: $('infDni').value.trim(), cel: $('infCel').value.trim(),
-    colegio: $('infCol').value.trim(), producto: valorOp('infProd') || 'PRE', grado: valorOp('infGrado'), hermano: valorOp('infProd') === 'PRE' && $('infHer').checked, idem: idem() };
+    colegio: $('infCol').value.trim(), producto: valorOp('infProd') || 'PRE', grado: valorOp('infGrado'), hermano: datosInf().hermano, idem: idem() };
   if (!d.grado) { aviso('infMsg', 'no', 'Elige el grado.'); return; }
   cargando(true);
   try {
@@ -505,15 +708,15 @@ function pasarACobro() {
   const r = Object.assign({}, S.sel.inf || {}, { nombre: $('infNom').value.trim(), dni: $('infDni').value.trim(), cel: $('infCel').value.trim(), colegio: $('infCol').value.trim() });
   const g = valorOp('infGrado'), her = $('infHer').checked, prod = valorOp('infProd') || 'PRE';
   r.producto = prod;
-  tab('tCob'); S.buscados.cob = [r]; elegir('cob', 0); ponerProducto('cob', prod); if (g) ponerOp('cobGrado', g); $('cobHer').checked = prod === 'PRE' && her; previewCob();
+  tab('tCob'); S.buscados.cob = [r]; elegir('cob', 0); ponerProducto('cob', prod); if (g) ponerOp('cobGrado', g); $('cobHer').checked = K_().hermano.indexOf(prod) >= 0 && her; previewCob();
 }
 
 // ===================== COBRO =====================
 function datosCob() {
   const r = S.sel.cob || {};
   const prod = valorOp('cobProd') || 'PRE';
-  return { producto: prod, familia: !!r.familia, grado: valorOp('cobGrado'), hermano: prod === 'PRE' && $('cobHer').checked, beca: prod === 'PRE' ? $('cobBeca').value : 'NO',
-    modalidad: valorOp('cobMod') || 'CONTADO', cotPreferencial: !!(r.cot && r.cot.tipo === 'PREFERENCIAL' && (r.cot.producto === 'PRE') === (prod === 'PRE')) };
+  return { producto: prod, familia: !!r.familia, grado: valorOp('cobGrado'), hermano: K_().hermano.indexOf(prod) >= 0 && $('cobHer').checked, beca: prod === 'PRE' ? $('cobBeca').value : 'NO',
+    modalidad: valorOp('cobMod') || 'CONTADO', cotPreferencial: !!(r.cot && r.cot.tipo === 'PREFERENCIAL' && grupoProducto(r.cot.producto) === prod) };
 }
 function previewCob() {
   $('cobHerBox').classList.toggle('oculto', !$('cobHer').checked);
@@ -521,6 +724,7 @@ function previewCob() {
   if (d.beca !== 'NO' && d.modalidad === '2PARTES') { ponerOp('cobMod', 'CONTADO'); d.modalidad = 'CONTADO'; }
   const p = precioLocal(d);
   if (!p) { $('cobPrecio').innerHTML = '<div class="msg am">Elige el grado para ver el precio.</div>'; $('cobHoy').textContent = 'S/ 0'; return; }
+  if (p.error) { $('cobPrecio').innerHTML = htmlPrecio(p); $('cobHoy').textContent = 'S/ 0'; S.hoyCob = 0; return; }
   if (p.modalidad !== d.modalidad) ponerOp('cobMod', p.modalidad);
   $('cobPrecio').innerHTML = htmlPrecio(p) + (d.beca !== 'NO' ? '<div class="msg am">BECA SOCIAL: no cuenta en las ' + S.est.vacantes + ' vacantes. Se paga al contado.</div>' : '');
   $('cobHoy').textContent = soles(p.hoy);
@@ -542,6 +746,7 @@ async function cobrar() {
     cotN: r.cot ? r.cot.n : '', pagos: pagos, idem: S.idemCob || (S.idemCob = idem()) });
   const p = precioLocal(dd);
   if (!p) { aviso('cobMsg', 'no', 'Elige el producto y el grado.'); return; }
+  if (p.error) { aviso('cobMsg', 'no', esc(p.error)); return; }
   if (p.saldo > 0 && !/^9\d{8}$/.test(d.cel.replace(/\D/g, '').slice(-9))) { aviso('cobMsg', 'no', 'Paga en 2 partes: escribe el WhatsApp del apoderado (9 dígitos) para avisarle de la 2.ª cuota.'); return; }
   if (!confirm('¿Cobrar ' + soles(p.hoy) + ' a ' + d.nombre + '?')) return;
   $('btnCobrar').disabled = true; cargando(true);
@@ -558,6 +763,7 @@ async function cobrar() {
       '<div style="display:flex;gap:8px;flex-wrap:wrap">' + (rc.whatsapp ? '<a class="btn ok gr" style="display:inline-flex;align-items:center;text-decoration:none" target="_blank" href="' + esc(rc.whatsapp) + '">Enviar ficha por WhatsApp</a>' : '<div class="msg am">No hay WhatsApp del apoderado: que escanee el QR del recibo.</div>') +
       '<button class="btn sec gr" onclick="copiar(\'' + esc(rc.linkFicha) + '\')">Copiar enlace</button>' +
       '<button class="btn sec gr" onclick="reimprimir(\'' + esc(rc.n) + '\')">Reimprimir recibo</button>' +
+      '<button class="btn sec gr" onclick="verFicha(\'' + esc(rc.codigo) + '\')">Imprimir ficha</button>' +
       '<button class="btn gr" onclick="limpiarCobro()">Siguiente alumno</button></div>';
     $('cobListo').classList.remove('oculto'); window.scrollTo(0, 0);
   } catch (e) { aviso('cobMsg', 'no', esc(e.message)); }
@@ -587,7 +793,8 @@ async function cargarHoy() {
     const j = await api('hoy');
     let h = '<div class="precio"><div><span>Efectivo</span><span>' + soles(j.totales.EFECTIVO) + '</span></div><div><span>Yape</span><span>' + soles(j.totales.YAPE) + '</span></div><div><span>Plin</span><span>' + soles(j.totales.PLIN) + '</span></div><div class="tot"><span>Total ' + esc(j.fecha) + '</span><span>' + soles(j.total) + '</span></div></div>';
     h += '<table class="tabla"><tr><th>N.°</th><th>Hora</th><th>Alumno</th><th>Concepto</th><th>Monto</th><th></th></tr>' + j.recibos.map(r =>
-      '<tr><td>' + esc(r.n) + '</td><td>' + esc(r.hora) + '</td><td>' + esc(r.nombre) + (r.tipo === 'BECA SOCIAL' ? ' <span class="tag am">Beca social</span>' : '') + '</td><td>' + esc(r.concepto) + '</td><td>' + soles(r.monto) + '</td><td><button class="btn sec" style="height:36px" onclick="reimprimir(\'' + esc(r.n) + '\')">Reimprimir</button></td></tr>').join('') + '</table>';
+      '<tr><td>' + esc(r.n) + '</td><td>' + esc(r.hora) + '</td><td>' + esc(r.nombre) + (r.tipo === 'BECA SOCIAL' ? ' <span class="tag am">Beca social</span>' : '') + '</td><td>' + esc(r.concepto) + '</td><td>' + soles(r.monto) + '</td><td style="white-space:nowrap"><button class="btn sec" style="height:36px" onclick="reimprimir(\'' + esc(r.n) + '\')">Reimprimir</button> ' +
+      (r.codigo ? '<button class="btn sec" style="height:36px" onclick="verFicha(\'' + esc(r.codigo) + '\')">Ficha</button>' : '') + '</td></tr>').join('') + '</table>';
     if (!j.recibos.length) h += '<div class="msg am">Todavía no hay recibos hoy.</div>';
     $('hoyRes').innerHTML = h;
   } catch (e) { $('hoyRes').innerHTML = '<div class="msg no">' + esc(e.message) + '</div>'; }
@@ -638,13 +845,21 @@ async function cargarCierre() {
   $('cieRes').innerHTML = '<div class="msg am">Cargando…</div>'; $('cieForm').classList.add('oculto');
   try {
     const j = await api('cierre'); S.cie = j;
-    let h = '<div class="msg ' + (j.recibos.length ? 'am' : 'ok') + '">' + (j.recibos.length ? 'Recibos de <b>' + esc(j.cajero) + '</b> sin cerrar: <b>' + (j.n + j.anulados) + '</b> (del ' + esc(j.del) + ' al ' + esc(j.al) + ')' : 'No tienes recibos pendientes de cierre.') + (j.ultimo ? '<br>Último cierre: ' + esc(j.ultimo) : '') + '</div>';
-    if (j.recibos.length) {
-      h += '<div class="precio"><div><span><b>Efectivo que debe haber en caja</b></span><span><b>' + soles(j.EFECTIVO) + '</b></span></div><div><span>Yape</span><span>' + soles(j.YAPE) + '</span></div><div><span>Plin</span><span>' + soles(j.PLIN) + '</span></div>' +
-        '<div class="tot"><span>Total cobrado por la caja</span><span>' + soles(j.total) + '</span></div>' +
+    const hay = j.recibos.length || j.egresos.length;
+    let h = '<div class="msg ' + (hay ? 'am' : 'ok') + '">' + (j.recibos.length ? 'Recibos de <b>' + esc(j.cajero) + '</b> sin cerrar: <b>' + (j.n + j.anulados) + '</b> (del ' + esc(j.del) + ' al ' + esc(j.al) + ')' : 'No tienes recibos pendientes de cierre.') +
+      (j.egresos.length ? '<br>Pagos (egresos) sin cerrar: <b>' + j.nEg + '</b>' : '') + (j.ultimo ? '<br>Último cierre: ' + esc(j.ultimo) : '') + '</div>';
+    if (hay && j.esperado < 0) h += '<div class="msg no">Se pagó más en efectivo (' + soles(j.egEf) + ') de lo que se cobró (' + soles(j.EFECTIVO) + '). Anota en la observación de dónde salieron los ' + soles(-j.esperado) + ' (sencillo de la caja u Omar).</div>';
+    if (hay) {
+      h += '<div class="precio"><div><span>Efectivo cobrado</span><span>' + soles(j.EFECTIVO) + '</span></div>' +
+        (j.egEf ? '<div><span>− Pagos en efectivo (egresos)</span><span>− ' + soles(j.egEf) + '</span></div>' : '') +
+        '<div class="tot"><span>Efectivo que debe haber en caja</span><span>' + soles(j.esperado) + '</span></div>' +
+        '<div><span>Yape</span><span>' + soles(j.YAPE) + '</span></div><div><span>Plin</span><span>' + soles(j.PLIN) + '</span></div>' +
+        '<div><span><b>Total cobrado por la caja</b></span><span><b>' + soles(j.total) + '</b></span></div>' +
+        (j.egOtros ? '<div><span>Pagos por Yape / Plin / transferencia (no tocan el cajón)</span><span>' + soles(j.egOtros) + '</span></div>' : '') +
         (j.omar ? '<div><span>Recibió Omar directo (no está en la caja)</span><span>' + soles(j.omar) + '</span></div>' : '') +
         (j.becaN ? '<div><span>Becas sociales (' + j.becaN + ')</span><span>' + soles(j.becaMonto) + '</span></div>' : '') + '</div>';
-      h += '<table class="tabla"><tr><th>N.°</th><th>Fecha</th><th>Alumno</th><th>Forma</th><th>Monto</th></tr>' + j.recibos.map(r => '<tr><td>' + esc(r.n) + '</td><td>' + esc(r.fecha) + ' ' + esc(r.hora) + '</td><td>' + esc(r.nombre) + (r.omar ? ' <span class="tag">Omar</span>' : '') + '</td><td>' + esc(r.forma) + '</td><td>' + soles(r.monto) + '</td></tr>').join('') + '</table>';
+      if (j.recibos.length) h += '<table class="tabla"><tr><th>N.°</th><th>Fecha</th><th>Alumno</th><th>Forma</th><th>Monto</th></tr>' + j.recibos.map(r => '<tr><td>' + esc(r.n) + '</td><td>' + esc(r.fecha) + ' ' + esc(r.hora) + '</td><td>' + esc(r.nombre) + (r.omar ? ' <span class="tag">Omar</span>' : '') + '</td><td>' + esc(r.forma) + '</td><td>' + soles(r.monto) + '</td></tr>').join('') + '</table>';
+      if (j.egresos.length) h += '<h3 style="margin-top:14px">Pagos (egresos)</h3><table class="tabla"><tr><th>N.°</th><th>Fecha</th><th>A quién · descripción</th><th>Concepto</th><th>Medio</th><th>Monto</th></tr>' + j.egresos.map(e => '<tr><td>' + esc(e.n) + '</td><td>' + esc(e.fecha) + ' ' + esc(e.hora) + '</td><td>' + (e.codigo ? '<b>' + esc(e.codigo) + '</b> ' : '') + esc(e.beneficiario || e.descripcion) + '</td><td>' + esc(e.concepto) + ' · ' + esc(e.periodo) + '</td><td>' + esc(e.medio) + '</td><td>− ' + soles(e.monto) + '</td></tr>').join('') + '</table>';
       $('cieForm').classList.remove('oculto'); $('cieCont').value = ''; $('cieObs').value = ''; difCierre(); aviso('cieMsg', '', '');
     }
     $('cieRes').innerHTML = h;
@@ -653,7 +868,7 @@ async function cargarCierre() {
 function difCierre() {
   if (!S.cie) return; const v = $('cieCont').value.trim();
   if (v === '') { $('cieDif').innerHTML = ''; return; }
-  const d = Math.round((Number(v) - S.cie.EFECTIVO) * 100) / 100;
+  const d = Math.round((Number(v) - S.cie.esperado) * 100) / 100;
   $('cieDif').innerHTML = '<div class="msg ' + (d === 0 ? 'ok' : 'no') + '">' + (d === 0 ? 'Cuadra exacto ✔' : (d > 0 ? 'Sobran ' : 'Faltan ') + soles(Math.abs(d))) + '</div>';
 }
 async function cerrarCaja() {
@@ -673,14 +888,232 @@ function imprimirCierre(j) {
   const c = j.cierre;
   let h = cabecera() + '<div class="c b" style="margin-top:5px">CIERRE DE CAJA</div><hr>' +
     '<div>Fecha: ' + esc(c.FECHA) + ' ' + esc(c.HORA_CIERRE) + '</div><div>Cajero: ' + esc(c.CAJERO) + '</div>' +
-    '<div>Recibos: ' + c.N_RECIBOS + ' (del ' + esc(c.DEL_RECIBO) + ' al ' + esc(c.AL_RECIBO) + ')</div>' + (c.N_ANULADOS ? '<div>Anulados: ' + c.N_ANULADOS + '</div>' : '') + '<hr>' +
-    L('Efectivo (sistema)', soles(c.EFECTIVO_SISTEMA)) + L('Yape', soles(c.YAPE)) + L('Plin', soles(c.PLIN)) + L('TOTAL CAJA', soles(c.TOTAL_SISTEMA), true) +
+    '<div>Recibos: ' + c.N_RECIBOS + (c.DEL_RECIBO ? ' (del ' + esc(c.DEL_RECIBO) + ' al ' + esc(c.AL_RECIBO) + ')' : '') + '</div>' + (c.N_ANULADOS ? '<div>Anulados: ' + c.N_ANULADOS + '</div>' : '') +
+    (c.N_EGRESOS ? '<div>Pagos (egresos): ' + c.N_EGRESOS + '</div>' : '') + '<hr>' +
+    L('Efectivo cobrado', soles(c.EFECTIVO_SISTEMA)) + (c.EGRESOS_EFECTIVO ? L('Pagos en efectivo', '-' + soles(c.EGRESOS_EFECTIVO)) + L('EFECTIVO ESPERADO', soles(c.ESPERADO), true) : '') +
+    L('Yape', soles(c.YAPE)) + L('Plin', soles(c.PLIN)) + L('TOTAL COBRADO', soles(c.TOTAL_SISTEMA), true) +
+    (c.EGRESOS_OTROS ? L('Pagos Yape/Plin/transf.', soles(c.EGRESOS_OTROS)) : '') +
     (c.RECIBIO_OMAR ? L('Recibió Omar directo', soles(c.RECIBIO_OMAR)) : '') + (c.N_BECA_SOCIAL ? L('Becas sociales (' + c.N_BECA_SOCIAL + ')', soles(c.MONTO_BECA_SOCIAL)) : '') + '<hr>' +
     L('Efectivo contado', soles(c.EFECTIVO_CONTADO), true) + L('Diferencia', (c.DIFERENCIA > 0 ? '+' : '') + soles(c.DIFERENCIA), true) +
     (c.OBSERVACION ? '<div>Obs.: ' + esc(c.OBSERVACION) + '</div>' : '') + '<hr>' +
     j.recibos.map(r => L(esc(r.n) + ' ' + esc(String(r.nombre).slice(0, 16)), soles(r.monto))).join('') +
+    ((j.egresos || []).length ? '<hr><div class="b">PAGOS (EGRESOS)</div>' + j.egresos.map(e => L('E' + esc(e.n) + ' ' + esc(String(e.beneficiario || e.descripcion || e.concepto).slice(0, 14)), '-' + soles(e.monto))).join('') : '') +
     '<hr><div style="margin-top:14px">Firma cajero: ____________________</div><div style="margin-top:14px">Recibido por: ____________________</div>';
   $('ticket').innerHTML = h; imprimir();
+}
+
+// ===================== PAGOS (EGRESOS v2 – por código) =====================
+async function abrirEgresos() {
+  if (!S.benefs) {
+    try {
+      const j = await api('beneficiarios'); S.benefs = j; S.egGer = j.gerente;
+      $('egCodL').innerHTML = j.beneficiarios.filter(b => b.activo || j.gerente).map(b => '<option value="' + esc(b.codigo) + '">' + esc(b.nombre + (b.detalle && b.detalle !== b.nombre ? ' · ' + b.detalle : '')) + '</option>').join('');
+      $('egMed').innerHTML = j.medios.map(m => '<option>' + esc(m) + '</option>').join('');
+      $('egForzarBox').classList.toggle('oculto', !j.gerente);
+      $('egLTit').textContent = j.gerente ? 'Pagos de los últimos 7 días (todos)' : 'Mis pagos sin cerrar';
+    } catch (e) { aviso('egMsg', 'no', esc(e.message)); return; }
+  }
+  cargarEgresos();
+}
+const FREC_TXT = { DIARIO: 'Se paga por día', SEMANAL: 'Se paga por semana', QUINCENAL: 'Se paga por quincena', MENSUAL: 'Se paga por mes', UNICO: 'Pago único' };
+const MODO_TXT = b => b.modo === 'POR_HORA' ? 'Por hora · ' + soles(b.monto_o_tarifa) + ' la hora' : (b.modo === 'FIJO' ? 'Fijo · ' + soles(b.monto_o_tarifa) : 'Monto variable');
+async function verBenef(periodo) {
+  const cod = $('egCod').value.trim();
+  $('egMsg').innerHTML = '';
+  if (!cod) { $('egFicha').innerHTML = ''; $('egForm').classList.add('oculto'); return; }
+  cargando(true);
+  try {
+    const j = await api('estadoBenef', { codigo: cod, periodo: periodo || '' });
+    S.ben = j.benef; S.benPer = j;
+    pintarBenef();
+  } catch (e) { $('egFicha').innerHTML = '<div class="msg no">' + esc(e.message) + '</div>'; $('egForm').classList.add('oculto'); S.ben = null; }
+  finally { cargando(false); }
+}
+function pintarBenef() {
+  const b = S.ben, e = b.estado, j = S.benPer;
+  $('egCod').value = b.codigo;
+  const pct = e.esperado ? Math.min(100, Math.round(e.pagado / e.esperado * 100)) : (e.pagos.length ? 100 : 0);
+  let der = '<div class="l"><span>Periodo</span><b>' + esc(e.periodo) + '</b></div>';
+  if (e.modo === 'VARIABLE') der += '<div class="l"><span>Pagado en este periodo</span><b>' + soles(e.pagado) + '</b></div><div class="l"><span>Estado</span><b>' + (e.pagos.length ? 'YA PAGADO' : 'Pendiente') + '</b></div>';
+  else if (e.modo === 'POR_HORA' && !e.horas) der += '<div class="l"><span>Esperado</span><b>horas × ' + soles(b.monto_o_tarifa) + '</b></div><div class="l"><span>Ya pagado</span><span>' + soles(e.pagado) + '</span></div>';
+  else der += '<div class="l"><span>Esperado' + (e.modo === 'POR_HORA' ? ' (' + e.horas + ' h × ' + soles(b.monto_o_tarifa) + ')' : '') + '</span><b>' + soles(e.esperado) + '</b></div>' +
+    '<div class="l"><span>Ya pagado' + (e.pagos.length ? ' (' + e.pagos.map(p => p.n_egreso).join(', ') + ')' : '') + '</span><span>' + soles(e.pagado) + '</span></div>' +
+    '<div class="barra"><div style="width:' + pct + '%"></div></div><div class="l"><span><b>Falta pagar</b></span><b>' + soles(e.saldo) + '</b></div>';
+  $('egFicha').innerHTML = '<div class="bficha"><div><div class="bn">' + esc(b.nombre) + '</div><small>' + esc(b.codigo) + ' · ' + esc(b.tipo.toLowerCase()) + (b.detalle && b.detalle !== b.nombre ? ' · ' + esc(b.detalle) : '') + '</small>' +
+    '<div style="margin-top:6px"><span class="tag">' + esc(MODO_TXT(b)) + '</span><span class="tag">' + esc(FREC_TXT[b.frecuencia] || b.frecuencia) + '</span>' + (b.activo ? '' : '<span class="tag no">Inactivo</span>') +
+    (b.modoHoja !== b.modo ? '<span class="tag am">Sin monto en la hoja: se escribe al pagar</span>' : '') + '</div></div><div>' + der + '</div></div>' +
+    (e.estado === 'PAGADO' ? '<div class="msg am">Este periodo ya está pagado. Otro pago será bloqueado (solo el Gerente puede forzarlo).</div>' : '');
+  // periodo: actual / anterior (Gerente puede escribir otro)
+  const ops = [[j.actual, 'Actual: ' + j.actual]];
+  if (j.anterior !== j.actual) ops.push([j.anterior, 'Anterior: ' + j.anterior]);
+  if (!ops.some(o => o[0] === e.periodo)) ops.push([e.periodo, e.periodo]);
+  $('egPer').innerHTML = ops.map(o => '<option value="' + esc(o[0]) + '"' + (o[0] === e.periodo ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('');
+  $('egPerBox').classList.toggle('oculto', b.frecuencia === 'UNICO');
+  const pideHoras = e.modo === 'POR_HORA' && !e.horas;
+  $('egHorBox').classList.toggle('oculto', !pideHoras); $('egHor').value = '';
+  $('egMon').value = e.modo === 'FIJO' || (e.modo === 'POR_HORA' && e.horas) ? (e.saldo > 0 ? e.saldo : '') : '';
+  $('egDescLbl').textContent = b.descObligatoria ? 'Descripción: qué se pagó o a quién (obligatoria)' : 'Descripción (opcional; si la dejas vacía se usa "' + (b.detalle || b.nombre) + '")';
+  $('egNota').value = '';
+  $('egForm').classList.remove('oculto');
+}
+function sugerirMonto() {
+  if (!S.ben || S.ben.estado.modo !== 'POR_HORA') return;
+  const h = Number(String($('egHor').value).replace(',', '.'));
+  $('egMon').value = h > 0 ? Math.round(h * S.ben.monto_o_tarifa * 100) / 100 : '';
+}
+function limpiarEgreso() {
+  ['egCod', 'egMon', 'egOp', 'egNota', 'egMotivo', 'egHor'].forEach(x => $(x).value = ''); $('egForzar').checked = false;
+  $('egMed').value = 'EFECTIVO'; $('egOpBox').classList.add('oculto'); $('egForm').classList.add('oculto'); $('egFicha').innerHTML = ''; S.ben = null;
+}
+async function registrarEgreso() {
+  const b = S.ben; if (!b) { aviso('egMsg', 'no', 'Escribe el código y pulsa Ver.'); return; }
+  const pideHoras = !$('egHorBox').classList.contains('oculto');
+  const d = { codigo: b.codigo, periodo: b.frecuencia === 'UNICO' ? 'UNICO' : $('egPer').value, monto: $('egMon').value.trim(), horas: pideHoras ? $('egHor').value.trim() : '',
+    medio: $('egMed').value, n_operacion: $('egOp').value.trim(), descripcion: $('egNota').value.trim(), origen: 'CAJA' };
+  if (pideHoras && !(Number(String(d.horas).replace(',', '.')) > 0)) { aviso('egMsg', 'no', 'Escribe las horas dictadas.'); return; }
+  if (!(Number(String(d.monto).replace(',', '.')) > 0)) { aviso('egMsg', 'no', 'Escribe el monto.'); return; }
+  if (b.descObligatoria && d.descripcion.length < 3) { aviso('egMsg', 'no', 'Escribe la descripción: qué se pagó o a quién.'); return; }
+  if (d.medio !== 'EFECTIVO' && !d.n_operacion) { aviso('egMsg', 'no', 'Escribe el N.° de operación del ' + d.medio.toLowerCase() + '.'); return; }
+  if ($('egForzar').checked) { d.forzar = true; d.motivo = $('egMotivo').value.trim(); }
+  if (!confirm('¿Registrar el pago de ' + soles(d.monto) + ' a ' + b.codigo + ' ' + b.nombre + ' (' + d.periodo + (d.horas ? ', ' + d.horas + ' h' : '') + ') en ' + d.medio.toLowerCase() + '?')) return;
+  d.idem = S.idemEg || (S.idemEg = idem());
+  $('btnEgr').disabled = true; cargando(true);
+  try {
+    const j = await api('registrarEgreso', {}, d);
+    S.idemEg = null;
+    imprimirEgreso(j.egreso);
+    const e = j.estado;
+    aviso('egMsg', 'ok', 'Pago registrado: egreso N.° <b>' + esc(j.n_egreso) + '</b>' + (e && e.esperado !== null ? ' · falta en el periodo: <b>' + soles(e.saldo) + '</b>' : '') + '. Imprimiendo el comprobante… ' +
+      (/^ENVIADO/.test(j.aviso_correo) ? '(aviso enviado a Omar)' : '<br><b>Ojo:</b> no se pudo enviar el correo a Omar (' + esc(j.aviso_correo) + '). Avísale por WhatsApp.'));
+    limpiarEgreso(); cargarEgresos();
+  } catch (e) {
+    S.idemEg = null;
+    const x = e.datos || {};
+    if (x.codigo === 'DUPLICADO' || x.codigo === 'EXCEDE') aviso('egMsg', 'no', '<b>PAGO BLOQUEADO.</b> ' + esc(x.msg));
+    else aviso('egMsg', 'no', esc(e.message));
+  } finally { $('btnEgr').disabled = false; cargando(false); }
+}
+async function cargarEgresos() {
+  try {
+    const p = {};
+    if (S.egGer) { const h = new Date(); h.setDate(h.getDate() - 7); p.desde = h.toISOString().slice(0, 10); }
+    const j = await api('listarEgresos', p);
+    let h = '<div class="precio"><div class="tot"><span>Total vigente (' + j.egresos.filter(e => e.estado === 'VIGENTE').length + ' pagos)</span><span>' + soles(j.total) + '</span></div><div><span>De eso, en efectivo</span><span>' + soles(j.efectivo) + '</span></div></div>';
+    h += '<table class="tabla"><tr><th>N.°</th><th>Fecha</th><th>Código · a quién</th><th>Periodo</th><th>Medio</th><th>Monto</th><th></th></tr>' + j.egresos.map(e =>
+      '<tr' + (e.estado === 'ANULADO' ? ' style="color:#888;text-decoration:line-through"' : '') + '><td>' + esc(e.n_egreso) + '</td><td>' + esc(e.fecha) + ' ' + esc(e.hora) + '</td><td><b>' + esc(e.codigo_benef) + '</b> ' + esc(e.beneficiario) +
+      '<br><small style="color:var(--su)">' + esc(e.descripcion) + (e.horas ? ' · ' + esc(e.horas) + ' h' : '') + '</small>' +
+      (e.forzado ? ' <span class="tag am">Forzado</span>' : '') + (e.origen === 'NEXUS' ? ' <span class="tag">NEXUS</span>' : '') + (e.estado === 'ANULADO' ? ' <span class="tag no">Anulado</span>' : '') +
+      '</td><td>' + esc(e.periodo) + (e.saldo_periodo !== '' && e.saldo_periodo !== undefined && Number(e.saldo_periodo) > 0 && e.estado === 'VIGENTE' ? '<br><small>falta ' + soles(e.saldo_periodo) + '</small>' : '') + '</td><td>' + esc(e.medio) + '</td><td>' + soles(e.monto) + '</td><td style="white-space:nowrap">' +
+      '<button class="btn sec" style="height:36px" onclick="reimprimirEgreso(\'' + esc(e.n_egreso) + '\')">Reimprimir</button>' +
+      (S.egGer && e.estado === 'VIGENTE' ? ' <button class="btn sec" style="height:36px;color:var(--no)" onclick="anularEgreso(\'' + esc(e.n_egreso) + '\')">Anular</button>' : '') + '</td></tr>').join('') + '</table>';
+    if (!j.egresos.length) h += '<div class="msg am">No hay pagos para mostrar.</div>';
+    $('egLista').innerHTML = h;
+  } catch (e) { $('egLista').innerHTML = '<div class="msg no">' + esc(e.message) + '</div>'; }
+}
+async function anularEgreso(n) {
+  const motivo = prompt('Motivo para ANULAR el egreso ' + n + ':');
+  if (!motivo || motivo.trim().length < 5) { if (motivo !== null) alert('Escribe un motivo (mínimo 5 letras).'); return; }
+  cargando(true);
+  try { const j = await api('anularEgreso', {}, { n_egreso: n, motivo: motivo.trim(), idem: idem() }); alert('Egreso ' + n + ' anulado.' + (j.nota ? '\n' + j.nota : '')); cargarEgresos(); }
+  catch (e) { alert(e.message); } finally { cargando(false); }
+}
+async function reimprimirEgreso(n) {
+  if (!String(n || '').trim()) return;
+  cargando(true);
+  try { const j = await api('egreso', { n }); imprimirEgreso(j.egreso); } catch (e) { alert(e.message); } finally { cargando(false); }
+}
+function imprimirEgreso(e) {
+  let h = cabecera() + '<div class="c b" style="margin-top:5px">COMPROBANTE DE EGRESO</div><div class="c b">N.° ' + esc(e.n_egreso) + '</div>' + (e.estado === 'ANULADO' ? '<div class="c b">*** ANULADO ***</div>' : '') + '<hr>' +
+    '<div>Fecha: ' + esc(e.fecha) + ' ' + esc(e.hora) + '</div><div>Registró: ' + esc(e.cajero) + (e.pagado_por === 'OMAR' ? ' (Omar)' : '') + '</div><hr>' +
+    '<div class="b">Pagado a:</div><div>' + esc(e.codigo_benef) + ' · ' + esc(e.beneficiario) + '</div><div>' + esc(e.concepto) + '</div><div>Periodo: ' + esc(e.periodo) + '</div>' +
+    (e.horas ? '<div>Horas: ' + esc(e.horas) + '</div>' : '') + (e.descripcion ? '<div>Descripción: ' + esc(e.descripcion) + '</div>' : '') + '<hr>' + L('MONTO', soles(e.monto), true) +
+    (e.esperado !== '' && e.esperado !== undefined ? '<div>Esperado del periodo: ' + soles(e.esperado) + '</div><div>Falta: ' + soles(e.saldo_periodo) + '</div>' : '') +
+    '<div>Medio: ' + esc(String(e.medio).toLowerCase()) + (e.n_operacion ? ' · Op. ' + esc(e.n_operacion) : '') + '</div>' + (e.forzado ? '<div>Forzado: ' + esc(e.forzado) + '</div>' : '') +
+    '<hr><div style="margin-top:4px">Recibí conforme:</div><div style="margin-top:16px">Firma: ____________________</div><div style="margin-top:8px">DNI: ______________________</div>' +
+    '<div style="margin-top:12px">Entregó: __________________</div>';
+  $('ticket').innerHTML = h; imprimir();
+}
+
+// ===================== PENDIENTES DEL PERIODO =====================
+const EST_TAG = { PENDIENTE: '<span class="tag no">Pendiente</span>', PARCIAL: '<span class="tag am">Parcial</span>', PAGADO: '<span class="tag ok">Pagado</span>' };
+async function cargarPendientes() {
+  $('penRes').innerHTML = '<div class="msg">Cargando…</div>';
+  try {
+    const j = await api('pendientes', { cual: $('penCual').value });
+    let h = '<div class="precio"><div><span>Por pagar en este periodo</span><b>' + j.nPendientes + '</b></div><div class="tot"><span>Falta (montos fijos)</span><span>' + soles(j.faltaConocido) + '</span></div></div>';
+    h += '<table class="tabla"><tr><th>Código</th><th>Nombre · detalle</th><th>Frecuencia</th><th>Periodo</th><th>Esperado</th><th>Pagado</th><th>Falta</th><th>Estado</th><th></th></tr>' + j.periodicos.map(f => {
+      const e = f.estado;
+      return '<tr><td><b>' + esc(f.codigo) + '</b></td><td>' + esc(f.nombre) + (f.detalle && f.detalle !== f.nombre ? '<br><small style="color:var(--su)">' + esc(f.detalle) + '</small>' : '') + '</td><td>' + esc(f.frecuencia) + '</td><td>' + esc(e.periodo) + '</td>' +
+        '<td>' + (e.esperado === null ? 'variable' : soles(e.esperado)) + '</td><td>' + soles(e.pagado) + '</td><td>' + (e.saldo === null ? '—' : '<b>' + soles(e.saldo) + '</b>') + '</td><td>' + EST_TAG[e.estado] + '</td>' +
+        '<td>' + (e.estado !== 'PAGADO' ? '<button class="btn sec" style="height:36px" onclick="pagarDesdePendientes(\'' + esc(f.codigo) + '\',\'' + esc(e.periodo) + '\')">Pagar</button>' : '') + '</td></tr>';
+    }).join('') + '</table>';
+    h += '<h3 style="margin-top:16px">Docentes y pagos diarios – pagados ' + (j.cual === 'anterior' ? 'ayer' : 'hoy') + '</h3>';
+    h += j.diarios.length ? '<table class="tabla"><tr><th>Código</th><th>Nombre</th><th>Horas</th><th>Pagado</th><th>Falta</th><th>Estado</th></tr>' + j.diarios.map(f => '<tr><td><b>' + esc(f.codigo) + '</b></td><td>' + esc(f.nombre) + (f.detalle && f.detalle !== f.nombre ? ' · ' + esc(f.detalle) : '') + '</td><td>' + (f.estado.horas || '') + '</td><td>' + soles(f.estado.pagado) + '</td><td>' + (f.estado.saldo === null ? '—' : soles(f.estado.saldo)) + '</td><td>' + EST_TAG[f.estado.estado] + '</td></tr>').join('') + '</table>'
+      : '<div class="msg am">Todavía no hay pagos diarios en este día.</div>';
+    h += '<div class="msg ok" style="font-size:13px">Los docentes por hora aparecen cuando se les paga. Saber quién dictó y todavía no cobra lo traerá después el módulo Control y pago de docentes.</div>';
+    $('penRes').innerHTML = h;
+  } catch (e) { $('penRes').innerHTML = '<div class="msg no">' + esc(e.message) + '</div>'; }
+}
+function pagarDesdePendientes(cod, periodo) {
+  tab('tEgr'); $('egCod').value = cod; verBenef(periodo);
+}
+
+// ===================== FICHA DE MATRÍCULA A4 =====================
+const GRADO_A4 = { '5TO': '5.º de secundaria', '4TO_O_MENOS': '4.º o menos', 'EGRESADO': 'Egresado', 'PASA_1': 'Pasa a 1.º', 'PASA_2': 'Pasa a 2.º', 'PASA_3': 'Pasa a 3.º', 'PASA_4': 'Pasa a 4.º' };
+async function verFicha(codigo) {
+  cargando(true);
+  try { const j = await api('fichaA4', { codigo }); pintarFichaA4(j.ficha, j.academia); $('zonaA4').classList.remove('oculto'); $('zonaA4').scrollTop = 0; }
+  catch (e) { alert(e.message); } finally { cargando(false); }
+}
+function cerrarA4() { $('zonaA4').classList.add('oculto'); }
+function imprimirA4() {
+  modoImpresion('a4');
+  const imgs = [...$('hojaA4').querySelectorAll('img')];
+  Promise.all(imgs.map(i => i.complete ? 1 : new Promise(ok => { i.onload = i.onerror = ok; }))).then(() => setTimeout(() => window.print(), 150));
+}
+function edad(fn) {
+  const m = String(fn || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/); if (!m) return '';
+  const h = new Date(); let a = h.getFullYear() - Number(m[3]);
+  if (h.getMonth() + 1 < Number(m[2]) || (h.getMonth() + 1 === Number(m[2]) && h.getDate() < Number(m[1]))) a--;
+  return a > 0 && a < 100 ? ' (' + a + ' años)' : '';
+}
+function pintarFichaA4(f, ac) {
+  const C = (lbl, v, cls) => '<div class="campo' + (cls ? ' ' + cls : '') + '"><small>' + lbl + '</small>' + esc(v || '') + '</div>';
+  const R = (a, b, cls) => '<tr><td' + (cls ? ' class="' + cls + '"' : '') + '>' + a + '</td><td class="m">' + b + '</td></tr>';
+  const inc = f.estadoFicha !== 'COMPLETA', pre = f.esPre !== undefined ? !!f.esPre : f.producto === 'PRE';
+  const ahora = new Date(), hh = ahora.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: false });
+  const rec1 = (f.recibos || []).find(r => r.concepto !== '2DA CUOTA') || (f.recibos || [])[0];
+  let h = '<div class="cab">' + (S.logo ? '<img src="' + S.logo + '" alt="">' : '<div></div>') +
+    '<div><h1>FICHA DE MATRÍCULA</h1><h2>Ciclo ' + esc(f.ciclo) + ' · ' + esc(f.productoTxt) + '</h2><div class="dir">' + esc(ac.direccion) + ' · Cel. ' + esc(ac.celular) + '</div></div>' +
+    '<div class="foto">' + (f.foto ? '<img src="' + f.foto + '" alt="">' : 'Pegar foto<br>tamaño carné') + '</div></div>';
+  if (inc) h += '<div class="incompleta">FICHA INCOMPLETA – completar a mano los datos que faltan y firmar</div>';
+  h += '<div class="claves"><div><small>Código</small><b>' + esc(f.codigo) + '</b></div><div><small>Programa</small><b>' + esc(f.productoTxt) + '</b></div>' +
+    '<div><small>Grado 2027</small><b>' + esc(GRADO_A4[f.grado] || f.grado) + '</b></div><div><small>Fecha de matrícula</small><b>' + esc(f.fechaMatricula) + '</b></div>' +
+    '<div><small>Recibo N.°</small><b>' + esc(rec1 ? rec1.n : '—') + '</b></div><div><small>Ficha</small><b>' + (inc ? 'INCOMPLETA' : 'COMPLETA' + (f.fechaFicha ? ' (' + esc(f.fechaFicha) + ')' : '')) + '</b></div>' +
+    '<div><small>Carnet</small><b>' + esc(f.carnet) + '</b></div><div><small>Libro</small><b>' + (f.libro === 'ENTREGADO' ? 'Entregado' : (f.libro ? 'Por recoger' : '—')) + '</b></div></div>';
+  h += '<div class="sec"><h3>1. Datos del alumno</h3><div class="grid g4">' + C('Apellidos y nombres', f.nombre, 'a3') + C('DNI', f.dni) +
+    C('Fecha de nacimiento', f.fechaNac ? f.fechaNac + edad(f.fechaNac) : '') + C('Celular', f.celAlumno) + C('Correo', f.correo, 'a2') +
+    C('Dirección', f.direccion, 'a2') + C('Distrito', f.distrito) + C('Año de egreso', f.grado === 'EGRESADO' ? f.anioEgreso : '—') + C('Colegio', f.colegio, 'a4') + '</div></div>';
+  h += '<div class="sec"><h3>2. Datos del apoderado</h3><div class="grid g4">' + C('Apellidos y nombres', f.apoderado, 'a2') + C('DNI', f.dniApoderado) + C('Vínculo', f.vinculo) +
+    C('Celular', f.celApoderado, 'a2') + C('WhatsApp para avisos', f.celAvisos, 'a2') + '</div></div>';
+  if (pre) h += '<div class="sec"><h3>3. Postulación</h3><div class="grid g2">' + C('Carrera', f.carrera) + C('Universidad', f.universidad) + '</div></div>';
+  const dsg = (f.desglose || []).map(x => esc(String(x[0]).toLowerCase()) + ' ' + Number(x[1])).join(' + ');
+  let pg = R('Precio normal' + (dsg ? ' <span style="font-size:8.5pt">(' + dsg + ')</span>' : ''), soles(f.lista));
+  (f.lineas || (f.descPromo ? [[f.promoTxt, f.descPromo]] : [])).forEach(x => { pg += R(esc(x[0]), '− ' + soles(x[1])); });
+  if (f.descHermano) pg += R('Descuento 2.º hermano' + (f.hermanoDe ? ' (de ' + esc(f.hermanoDe) + ')' : ''), '− ' + soles(f.descHermano));
+  if (f.recargo) pg += R('Recargo pago en 2 partes', '+ ' + soles(f.recargo));
+  pg += '<tr class="total"><td>TOTAL</td><td class="m">' + soles(f.total) + '</td></tr>' + R('Modalidad', f.modalidad === '2 PARTES' ? '2 partes' : 'Contado') +
+    (f.recibos || []).map(r => R('Pagado ' + (r.concepto === '2DA CUOTA' ? '2.ª cuota' : (f.modalidad === '2 PARTES' ? '1.ª cuota' : 'al contado')) + ' · recibo ' + esc(r.n), soles(r.monto))).join('') +
+    (f.saldo > 0 ? R('<b>Saldo</b>' + (f.vence ? ' · vence ' + esc(f.vence) : ''), '<b>' + soles(f.saldo) + '</b>') : R('<b>Saldo</b>', '<b>S/ 0 (cancelado)</b>'));
+  const n = pre ? 4 : 3;
+  h += '<div class="dos"><div class="sec"><h3>' + n + '. Forma de pago</h3><table class="pago">' + pg + '</table></div>' +
+    '<div class="sec"><h3>' + (n + 1) + '. Autorizaciones</h3><div class="aut">' +
+    '<p><span class="cx">' + (f.autorizaDatos ? 'X' : '') + '</span><span><b>Datos personales (obligatoria).</b> Autorizo a FAUSTINO PRE a usar estos datos y la foto del alumno para la matrícula, el carnet y los avisos de asistencia, notas y pagos, conforme a la Ley N.° 29733 de Protección de Datos Personales.</span></p>' +
+    '<p><span class="cx">' + (f.autorizaPublicidad ? 'X' : '') + '</span><span><b>Publicidad (opcional).</b> Autorizo el uso de fotos del alumno en actividades de la academia para publicaciones y redes sociales de FAUSTINO PRE.</span></p>' +
+    '<div class="nota">' + (inc ? 'Marcar con X y firmar.' : 'Aceptadas por el apoderado en la ficha digital' + (f.fechaFicha ? ' el ' + esc(f.fechaFicha) : '') + '.') + '</div></div></div></div>';
+  h += '<div class="firmas"><div>Firma del apoderado<br>' + (f.apoderado ? esc(f.apoderado) + (f.dniApoderado ? ' · DNI ' + esc(f.dniApoderado) : '') : 'Nombre: ______________________ DNI: __________') + '</div><div>Por FAUSTINO PRE<br>Nombre y sello</div></div>' +
+    '<div class="pie"><span>Impresa el ' + esc(hh) + ' · ' + esc(S.cajero) + '</span><span>Ficha N.° ' + esc(f.codigo) + '</span></div>';
+  $('hojaA4').innerHTML = h;
 }
 
 // ===================== TICKETS 80 mm =====================
@@ -699,10 +1132,10 @@ function imprimirRecibo(r) {
   let h = cabecera() + '<div class="c b" style="margin-top:5px">RECIBO INTERNO N.° ' + esc(r.n) + '</div>' + (r.anulado ? '<div class="c b">*** ANULADO ***</div>' : '') + '<hr>' +
     '<div>Fecha: ' + esc(r.fecha) + ' ' + esc(r.hora) + '</div><div>Cajero: ' + esc(r.cajero) + '</div>' +
     '<div>Alumno: ' + esc(r.nombre) + '</div><div>Código: ' + esc(r.codigo) + '</div><div>Ciclo: ' + esc(r.ciclo) + '</div>' +
-    '<div>Programa: ' + esc(r.productoTxt || 'Preuniversitario') + '</div>' + (r.categoria && r.producto === 'PRE' ? '<div>Categoría: ' + esc(r.categoria) + '</div>' : '') +
+    '<div>Programa: ' + esc(r.productoTxt || 'PRE Full Day') + '</div>' + (r.familia && r.tipo !== 'BECA SOCIAL' ? '<div>Precio Familia Faustino</div>' : (r.tipo === 'BECA SOCIAL' ? '<div>' + esc(r.categoria) + '</div>' : '')) +
     '<div>Concepto: ' + (r.concepto === '2DA CUOTA' ? 'Segunda cuota' : 'Matrícula') + '</div><hr>';
-  h += L('Precio de lista', soles(r.lista)) + desgloseTk(r.desglose);
-  if (r.descPromo) h += L(esc(r.descPromoTxt), '-' + soles(r.descPromo));
+  h += L('Precio normal', soles(r.lista)) + desgloseTk(r.desglose);
+  (r.lineas || (r.descPromo ? [[r.descPromoTxt, r.descPromo]] : [])).forEach(x => { h += lineaTk(x[0], '-' + soles(x[1])); });
   if (r.descHermano) h += L('Dscto. 2.º hermano', '-' + soles(r.descHermano));
   if (r.recargo) h += L('Pago en 2 partes', '+' + soles(r.recargo));
   h += L('TOTAL', soles(r.total), true) + '<hr>';
@@ -721,8 +1154,8 @@ function imprimirCot(c) {
     '<div>Fecha: ' + esc(c.fecha) + '</div><div class="b">Válida hasta: ' + esc(c.vence) + '</div>' +
     '<div>Alumno: ' + esc(c.nombre) + '</div>' + (c.codigo ? '<div>Código: ' + esc(c.codigo) + '</div>' : '') +
     '<div>Ciclo: ' + esc(c.ciclo) + '</div><div>Programa: ' + esc(c.productoTxt) + '</div>' + (c.situacion ? '<div>' + esc(c.situacion) + '</div>' : '') + '<div>' + esc(GRADO_TXT[c.grado] || '') + '</div><hr>' +
-    L('Precio de lista', soles(c.lista)) + desgloseTk(c.desglose);
-  if (c.promo) h += L(esc(c.promoTxt), '-' + soles(c.promo));
+    L('Precio normal', soles(c.lista)) + desgloseTk(c.desglose);
+  (c.lineas || []).forEach(x => { h += lineaTk(x[0], '-' + soles(x[1])); });
   if (c.hermano) h += L('Dscto. 2.º hermano', '-' + soles(c.hermano));
   h += L('AL CONTADO', soles(c.contado), true) + '<hr>';
   if (c.dosPartes) h += '<div class="b">En 2 partes: ' + soles(c.dosPartes) + '</div>' + L('1.ª cuota', soles(c.primera)) + L('2.ª cuota (a ' + c.dias2 + ' días)', soles(c.segunda)) + '<hr>';
@@ -730,8 +1163,16 @@ function imprimirCot(c) {
   h += '<div class="c b" style="margin-top:4px">¡TE ESPERAMOS!</div>';
   $('ticket').innerHTML = h; imprimir();
 }
+// Línea de ticket con texto largo (ej. "Promoción: matrícula y material GRATIS"): el texto se parte en 2 líneas si hace falta
+function lineaTk(txt, monto) { return '<div class="l"><span style="max-width:70%">' + esc(txt) + '</span><span>' + monto + '</span></div>'; }
 function desgloseTk(d) { return (d || []).map(x => '<div class="l sub"><span>' + x[0] + '</span><span>' + soles(x[1]) + '</span></div>').join(''); }
+function modoImpresion(m) {
+  document.body.classList.toggle('pTicket', m === 'ticket'); document.body.classList.toggle('pA4', m === 'a4');
+  let st = $('estiloPagina'); if (!st) { st = document.createElement('style'); st.id = 'estiloPagina'; document.head.appendChild(st); }
+  st.textContent = m === 'a4' ? '@media print{@page{size:A4;margin:10mm 14mm}}' : '@media print{@page{size:80mm auto;margin:0}}';
+}
 function imprimir() {
+  modoImpresion('ticket');
   const imgs = [...$('ticket').querySelectorAll('img')];
   Promise.all(imgs.map(i => i.complete ? 1 : new Promise(ok => { i.onload = i.onerror = ok; }))).then(() => setTimeout(() => window.print(), 150));
 }
@@ -740,4 +1181,3 @@ iniciar();
 </script>
 </body>
 </html>
-
